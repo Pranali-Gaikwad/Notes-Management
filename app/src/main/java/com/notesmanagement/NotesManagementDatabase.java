@@ -1,7 +1,6 @@
 package com.notesmanagement;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -25,9 +24,11 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
 
 
 
-    public NotesManagementDatabase(Context context) {
+    public NotesManagementDatabase(MainActivity context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
+
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -106,15 +107,26 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
     }
 
 
+public void deleteNote(long id)
+{
+    SQLiteDatabase db =this.getWritableDatabase();
+    db.delete(DATABASE_TABLE, COLOUM_ID+"=?",new
+             String[]{String.valueOf(id)});
+    db.close();
+}
 
+public int editNote(Notes n)
+{
+    SQLiteDatabase db =this.getWritableDatabase();
+    ContentValues contentValues = new ContentValues();
+    contentValues.put(COLOUM_TITLE, n.get_title());
+    contentValues.put(COLOUM_CONTENT, n.get_content());
+    contentValues.put(COLOUM_DATE_OF_CREATION, n.get_dateOfCreation());
+    contentValues.put(COLOUM_TIME, n.get_time());
 
-
-
-
-
-
-
-
+  return db.update(DATABASE_TABLE, contentValues, COLOUM_ID+"=?",new
+          String[]{String.valueOf(n.get_id())});
+}
 
 
 

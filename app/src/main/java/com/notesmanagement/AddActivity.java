@@ -21,7 +21,7 @@ public class AddActivity extends AppCompatActivity {
     Calendar c;
     String todaysDate;
     String currentTime;
-    NotesManagementDatabase notesManagementDatabase;
+
 
 
     @Override
@@ -76,10 +76,10 @@ public class AddActivity extends AppCompatActivity {
         return true;
 
     }
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.save) {
 
-          notesManagementDatabase=new NotesManagementDatabase(this);
+            NotesManagementDatabase notesManagementDatabase=new NotesManagementDatabase(this);
 
             notesManagementDatabase.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate, currentTime));
           Toast.makeText(this,"save b pressed", Toast.LENGTH_SHORT).show();
