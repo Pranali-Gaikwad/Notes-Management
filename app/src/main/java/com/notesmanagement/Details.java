@@ -5,8 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,9 +31,6 @@ public class Details extends AppCompatActivity {
 
 
 
-
-
-
         Intent intent = getIntent();
         Long id1 = intent.getLongExtra("ID", 0);
         database=new NotesManagementDatabase(this);
@@ -45,9 +40,6 @@ public class Details extends AppCompatActivity {
         date1.setText(notes.get_dateOfCreation());
         time.setText(notes.get_time());
         getSupportActionBar().setTitle(notes.get_title());
-
-     Toast.makeText(this, "title -> " +notes.get_title() , Toast.LENGTH_SHORT).show();
-
 
 
         d.setOnClickListener(new View.OnClickListener() {
@@ -68,7 +60,6 @@ public class Details extends AppCompatActivity {
     }
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.edit) {
-            Toast.makeText(this, "Edit button pressed",Toast.LENGTH_SHORT).show();
             Intent intent=new Intent(this, Edit.class);
             intent.putExtra("ID", notes.get_id());
             startActivity(intent);

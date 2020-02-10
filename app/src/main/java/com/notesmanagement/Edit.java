@@ -2,7 +2,6 @@ package com.notesmanagement;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -12,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import java.util.Calendar;
 
 public class Edit extends AppCompatActivity {
@@ -93,12 +91,9 @@ public class Edit extends AppCompatActivity {
                 n.set_time(currentTime);
                 int i=db.editNote(n);
                 if(i==n.get_id())
-                {
-
-                    Toast.makeText(this,"Note Updated Successfully", Toast.LENGTH_SHORT).show();
-                }
+                {}
                 else {
-                    Toast.makeText(this,"Error Occured", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Note Update Successfully", Toast.LENGTH_SHORT).show();
                 }
 
                 Intent intent=new Intent(getApplicationContext(), MainActivity.class);
@@ -106,10 +101,6 @@ public class Edit extends AppCompatActivity {
                 startActivity(intent);
 
             }
-
-
-
-
 
         }
         if (item.getItemId() == R.id.delete) {
