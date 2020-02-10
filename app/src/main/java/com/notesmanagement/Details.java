@@ -2,10 +2,6 @@ package com.notesmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -37,41 +33,32 @@ public class Details extends AppCompatActivity {
 
 
 
-        d.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            notes=new Notes();
-            database.deleteNote(notes.get_id());
-            startActivity(new Intent(getApplicationContext(),MainActivity.class));
 
-            }
-        });
 
 
         Intent intent = getIntent();
         Long id1 = intent.getLongExtra("ID", 0);
-        String t = intent.getStringExtra("title");
-        String c = intent.getStringExtra("Details");
-        String d = intent.getStringExtra("date");
-        String w = intent.getStringExtra("time");
-        details.setText(c);
-        date1.setText(d);
-        time.setText(w);
+        database=new NotesManagementDatabase(this);
+        notes=database.getOneNote(id1);
 
-        getSupportActionBar().setTitle(t);
+        details.setText(notes.get_content());
+        date1.setText(notes.get_dateOfCreation());
+        time.setText(notes.get_time());
+        getSupportActionBar().setTitle(notes.get_title());
 
-        Toast.makeText(this, "ID -> " + notes.get_dateOfCreation(), Toast.LENGTH_SHORT).show();
+     Toast.makeText(this, "title -> " +notes.get_title() , Toast.LENGTH_SHORT).show();
 
-      /*  FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+
+        d.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                database.deleteNote(notes.get_id());
+                Toast.makeText(getApplicationContext(),"Note Successfully Deleted",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+
+
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-*/
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -82,13 +69,13 @@ public class Details extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.edit) {
             Toast.makeText(this, "Edit button pressed",Toast.LENGTH_SHORT).show();
+            Intent intent=new Intent(this, Edit.class);
+            intent.putExtra("ID", notes.get_id());
+            startActivity(intent);
 
 
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
 
 }

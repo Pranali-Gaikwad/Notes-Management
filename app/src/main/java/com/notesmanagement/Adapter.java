@@ -35,11 +35,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     public void onBindViewHolder(@NonNull Adapter.ViewHolder holder, int position) {
 
         holder.nTitle1.setText(notes.get(position).get_title());
-        String w= notes.get(position).get_dateOfCreation();
-        holder.nDate1.setText(w);
-        String p= notes.get(position).get_time();
-        holder.nTime1.setText(p);
-        Log.d("date", "date time" +w);
+        holder.nDate1.setText(notes.get(position).get_dateOfCreation());
+        holder.nTime1.setText(notes.get(position).get_time());
+
+       // Log.d("date", "date time" +w);
     }
 
     @Override
@@ -60,17 +59,17 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent= new Intent(v.getContext(),Details.class);
+                   Intent intent= new Intent(v.getContext(), Details.class);
                     intent.putExtra("ID", notes.get(getAdapterPosition()).get_id());
-                    intent.putExtra("title", notes.get(getAdapterPosition()).get_title());
+                   /* intent.putExtra("title", notes.get(getAdapterPosition()).get_title());
                     intent.putExtra("Details", notes.get(getAdapterPosition()).get_content());
                     intent.putExtra("date", notes.get(getAdapterPosition()).get_dateOfCreation());
                     intent.putExtra("time", notes.get(getAdapterPosition()).get_time());
-
+*/
                     v.getContext().startActivity(intent);
 
 
-                    //Toast.makeText(v.getContext(),"Item Pressed",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(v.getContext(),"Item Pressed" ,Toast.LENGTH_SHORT).show();
                 }
             });
 

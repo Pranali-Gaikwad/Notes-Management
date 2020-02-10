@@ -5,20 +5,20 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#F7F3F3"
-  >
+    android:background="#F7F3F3">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="100dp"
         android:orientation="vertical"
         android:background="#ffffff"
-        android:padding="15dp">
+        android:divider="#000000"
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:src="@drawable/sticky" />
 
         <TextView
@@ -26,28 +26,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Note Title"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_marginLeft="150dp"/>
+            android:layout_marginLeft="100dp"/>
 
         <TextView
             android:id="@+id/nDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
+            android:layout_marginTop="50dp"
 
-            android:textSize="20sp"
-            android:layout_marginLeft="150dp"
+            android:textSize="15sp"
+            android:layout_marginLeft="100dp"
             android:text="07/02/2020" />
 
         <TextView
             android:id="@+id/nTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="70dp"
-            android:textSize="20sp"
-            android:layout_marginLeft="300dp"
+            android:layout_marginTop="50dp"
+            android:textSize="15sp"
+            android:layout_marginLeft="250dp"
             android:text="04:40" />
     </androidx.cardview.widget.CardView>
 

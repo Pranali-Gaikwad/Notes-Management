@@ -1,9 +1,8 @@
 package com.notesmanagement;
 
-import java.util.Calendar;
-import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,27 +10,36 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Calendar;
 
-public class AddActivity extends AppCompatActivity {
-
-    TextView dateshow;
+public class Edit extends AppCompatActivity {
     EditText noteTitle;
     EditText noteDetails;
     Calendar c;
     String todaysDate;
     String currentTime;
+    NotesManagementDatabase db;
+    Notes n;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add);
-        getSupportActionBar().setTitle("New Note");
+        setContentView(R.layout.activity_edit);
+
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        Intent intent = getIntent();
+        Long id1 = intent.getLongExtra("ID", 0);
+         db=new NotesManagementDatabase(this);
+          n=db.getOneNote(id1);
+
         noteTitle=findViewById(R.id.note_title);
         noteDetails=findViewById(R.id.note_details);
-     //  dateshow=findViewById(R.id.datetoshow);
+        getSupportActionBar().setTitle(n.get_title());
+        noteTitle.setText(n.get_title());
+        noteDetails.setText(n.get_content());
+
 
 
         noteTitle.addTextChangedListener(new TextWatcher() {
@@ -78,11 +86,29 @@ public class AddActivity extends AppCompatActivity {
     }
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.save) {
-            NotesManagementDatabase db=new NotesManagementDatabase(this);
+            if(noteTitle.getText()!= null){
+                n.set_title(noteTitle.getText().toString());
+                n.set_content(noteDetails.getText().toString());
+                n.set_dateOfCreation(todaysDate);
+                n.set_time(currentTime);
+                int i=db.editNote(n);
+                if(i==n.get_id())
+                {
 
-            db.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate, currentTime));
-            Toast.makeText(this,"save b pressed", Toast.LENGTH_SHORT).show();
-            gotoMain();
+                    Toast.makeText(this,"Note Updated Successfully", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(this,"Error Occured", Toast.LENGTH_SHORT).show();
+                }
+
+                Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+                intent.putExtra("ID", n.get_id());
+                startActivity(intent);
+
+            }
+
+
+
 
 
         }
@@ -98,11 +124,9 @@ public class AddActivity extends AppCompatActivity {
         Intent intent=new Intent(this, MainActivity.class);
         startActivity(intent);
     }
-
     public void onBackPressed(){
         super.onBackPressed();
 
     }
-
-
 }
+
