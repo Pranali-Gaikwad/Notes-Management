@@ -1,6 +1,10 @@
 package com.notesmanagement;
 
 import java.util.Calendar;
+
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,11 +22,18 @@ import android.widget.Toast;
 public class AddActivity extends AppCompatActivity {
 
     TextView dateshow;
+    TextView timeshow;
     EditText noteTitle;
     EditText noteDetails;
     Calendar c;
     String todaysDate;
     String currentTime;
+    Button saved;
+    TextWatcher mTextWatcher;
+
+    String s1;
+
+    String s2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,8 +42,67 @@ public class AddActivity extends AppCompatActivity {
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         noteTitle=findViewById(R.id.note_title);
         noteDetails=findViewById(R.id.note_details);
-     //  dateshow=findViewById(R.id.datetoshow);
+        dateshow=(TextView) findViewById(R.id.dateadd);
+        timeshow=(TextView)findViewById(R.id.timeadd);
 
+         saved=(Button)findViewById(R.id.saveDataButton);
+
+
+       s1 = noteTitle.getText().toString();
+        s2 = noteDetails.getText().toString();
+
+    /*    noteTitle.addTextChangedListener(mTextWatcher);
+        noteDetails.addTextChangedListener(mTextWatcher);
+         checkFieldsForEmptyValues();*/
+
+        // run once to disable if empty
+
+
+
+     /*  mTextWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // check Fields For Empty Values
+                checkFieldsForEmptyValues();
+            }
+        };*/
+
+
+
+       c=Calendar.getInstance();
+        todaysDate=c.get(Calendar.DAY_OF_MONTH)+"/"+(c.get(Calendar.MONTH)+1)+"/"+c.get(Calendar.YEAR);
+        currentTime=pad(c.get(Calendar.HOUR))+":"+pad(c.get(Calendar.MINUTE));
+        Log.d("calender", " Date and Time "  + todaysDate +  " and " + currentTime);
+        Log.d("to" ,"date"+todaysDate);
+
+        dateshow.setText(String.valueOf(todaysDate));
+        timeshow.setText(String.valueOf(currentTime));
+
+
+         saved.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 if((!isEmpty(noteTitle)) || (!isEmpty(noteDetails)))
+                 {
+                     NotesManagementDatabase db = new NotesManagementDatabase(v.getContext());
+                     db.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate, currentTime));
+                     Toast.makeText(v.getContext(), "Note Successfully Saved", Toast.LENGTH_SHORT).show();
+                     gotoMain();
+                 }
+                 else {
+                     Toast.makeText(v.getContext(), " Empty Note can not be Saved", Toast.LENGTH_SHORT).show();
+                 }
+
+             }
+         });
 
         noteTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -56,10 +126,7 @@ public class AddActivity extends AppCompatActivity {
         });
 
 
-        c=Calendar.getInstance();
-        todaysDate=c.get(Calendar.DAY_OF_MONTH)+"/"+(c.get(Calendar.MONTH)+1)+"/"+c.get(Calendar.YEAR);
-        currentTime=pad(c.get(Calendar.HOUR))+":"+pad(c.get(Calendar.MINUTE));
-        Log.d("calender", " Date and Time "  + todaysDate +  " and " + currentTime);
+
 
     }
 
@@ -77,7 +144,7 @@ public class AddActivity extends AppCompatActivity {
 
     }
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.save) {
+       if (item.getItemId() == R.id.save) {
             NotesManagementDatabase db=new NotesManagementDatabase(this);
             db.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate, currentTime));
             Toast.makeText(this,"Note Successfully Saved", Toast.LENGTH_SHORT).show();
@@ -100,6 +167,13 @@ public class AddActivity extends AppCompatActivity {
 
     public void onBackPressed(){
         super.onBackPressed();
+
+    }
+
+    boolean isEmpty(EditText text)
+    {
+        CharSequence str= text.getText().toString();
+        return TextUtils.isEmpty(str);
 
     }
 

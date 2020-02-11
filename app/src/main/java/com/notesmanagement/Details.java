@@ -1,8 +1,10 @@
 package com.notesmanagement;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
@@ -44,13 +46,14 @@ public class Details extends AppCompatActivity {
 
         d.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                database.deleteNote(notes.get_id());
-                Toast.makeText(getApplicationContext(),"Note Successfully Deleted",Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                        database.deleteNote(notes.get_id());
+                        Toast.makeText(getApplicationContext(),"Note Successfully Deleted",Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
 
 
-            }
-        });
+                    }
+                                });
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
