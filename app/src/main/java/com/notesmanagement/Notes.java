@@ -63,4 +63,15 @@ public class Notes {
     public void set_time(String _time) {
         this._time = _time;
     }
+
+    @Override
+    public String toString() {
+        return "Notes{" +
+                "_id=" + _id +
+                ", _title='" + _title + '\'' +
+                ", _content='" + _content + '\'' +
+                ", _dateOfCreation='" + _dateOfCreation + '\'' +
+                ", _time='" + _time + '\'' +
+                '}';
+    }
 }
