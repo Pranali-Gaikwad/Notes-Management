@@ -1,6 +1,7 @@
 package com.notesmanagement;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -14,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -54,6 +54,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+       ActionBar actionBar=getSupportActionBar();
+       if (actionBar != null)
+       {
+           actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient));
+       }
+
+
+
+
         recyclerView = findViewById(R.id.review);
         NotesManagementDatabase db1=new NotesManagementDatabase(this);
 
@@ -62,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter= new Adapter(this, notes);
 
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+       // recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setAdapter(adapter);
 
         Collections.reverse(notes);
@@ -77,17 +87,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
-
-
-   /* public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.addButton) {
-            Intent intent = new Intent(this, AddActivity.class);
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.folder) {
+            Intent intent=new Intent(this, Folders.class);
             startActivity(intent);
+
 
         }
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 }
 

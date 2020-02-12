@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="#F7F3F3"
     android:gravity="center">
     <Button
         android:id="@+id/saveEditButton"
@@ -20,28 +20,32 @@
 
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="390dp"
         android:layout_height="50dp"
+        android:layout_marginTop="10dp"
+        android:background="#ffffff"
         android:orientation="vertical">
 
 
         <EditText
             android:id="@+id/note_title"
-
-            android:maxLength="25"
-            android:layout_marginLeft="15dp"
+            android:textSize="20dp"
+            android:maxLength="27"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Note Title" />
+            android:hint="Note Title"
+            android:background="@null"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="400dp"
-        android:layout_marginTop="5dp"
+        android:layout_width="390dp"
+        android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/cutomborder">
+        android:background="#ffffff"
+        android:orientation="vertical">
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="500dp"
@@ -54,13 +58,15 @@
             android:lines="20"
             android:minLines="6"
             android:gravity="top|left"
-            android:maxLines="120"
-
+            android:maxLines="80"
+            android:textSize="20dp"
             android:layout_height="500dp"
             android:layout_width="match_parent"
             android:scrollbars="vertical"
             android:background="@null"
             android:hint="Note Details"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="10dp"
             />
         </ScrollView>
 

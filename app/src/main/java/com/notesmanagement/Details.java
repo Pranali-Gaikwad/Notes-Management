@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -26,6 +27,12 @@ public class Details extends AppCompatActivity {
         setContentView(R.layout.activity_details);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        ActionBar actionBar=getSupportActionBar();
+        if (actionBar != null)
+        {
+            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient));
+        }
+
         d=(Button) findViewById(R.id.delete);
         details = findViewById(R.id.dContent);
         date1 = findViewById(R.id.dDate);
@@ -73,19 +80,13 @@ public class Details extends AppCompatActivity {
     private AlertDialog AskOption()
     {
         AlertDialog myQuittingDialogBox = new AlertDialog.Builder(this)
-                // set message, title, and icon
                 .setTitle("Delete Note")
                 .setMessage("Delete this note?")
-
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        //your deleting code
                         database.deleteNote(notes.get_id());
                         Toast.makeText(getApplicationContext(),"Note Successfully Deleted",Toast.LENGTH_SHORT).show();
                         startActivity(new Intent(getApplicationContext(),MainActivity.class));
-
-
                         dialog.dismiss();
                     }
 

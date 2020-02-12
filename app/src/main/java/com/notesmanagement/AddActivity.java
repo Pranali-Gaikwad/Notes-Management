@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,17 +30,20 @@ public class AddActivity extends AppCompatActivity {
     String todaysDate;
     String currentTime;
     Button saved;
-    TextWatcher mTextWatcher;
 
-    String s1;
-
-    String s2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
         getSupportActionBar().setTitle("New Note");
         getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar=getSupportActionBar();
+        if (actionBar != null)
+        {
+            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient));
+        }
+
+
         noteTitle=findViewById(R.id.note_title);
         noteDetails=findViewById(R.id.note_details);
         dateshow=(TextView) findViewById(R.id.dateadd);
@@ -47,37 +51,7 @@ public class AddActivity extends AppCompatActivity {
 
          saved=(Button)findViewById(R.id.saveDataButton);
 
-
-       s1 = noteTitle.getText().toString();
-        s2 = noteDetails.getText().toString();
-
-    /*    noteTitle.addTextChangedListener(mTextWatcher);
-        noteDetails.addTextChangedListener(mTextWatcher);
-         checkFieldsForEmptyValues();*/
-
-        // run once to disable if empty
-
-
-
-     /*  mTextWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                // check Fields For Empty Values
-                checkFieldsForEmptyValues();
-            }
-        };*/
-
-
-
-       c=Calendar.getInstance();
+         c=Calendar.getInstance();
         todaysDate=c.get(Calendar.DAY_OF_MONTH)+"/"+(c.get(Calendar.MONTH)+1)+"/"+c.get(Calendar.YEAR);
         currentTime=pad(c.get(Calendar.HOUR))+":"+pad(c.get(Calendar.MINUTE));
         Log.d("calender", " Date and Time "  + todaysDate +  " and " + currentTime);

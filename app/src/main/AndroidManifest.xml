@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/notesmanagementlogo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Edit"></activity>
+        <activity android:name=".Settings"></activity>
+        <activity android:name=".Folders" />
+        <activity android:name=".Edit" />
         <activity
             android:name=".Details"
             android:label="@string/title_activity_details"
@@ -19,7 +21,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.notesmanagement.MainActivity" />
         </activity>
-        <activity android:name=".AddActivity">
+        <activity android:name=".AddActivity" android:windowSoftInputMode="adjustResize|adjustPan">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />

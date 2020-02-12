@@ -6,7 +6,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="#F7F3F3">
 
     <Button
         android:id="@+id/additionButton"

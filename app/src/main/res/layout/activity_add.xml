@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:layout_height="wrap_content"
+    android:background="#F7F3F3"
     android:gravity="center">
 
     <LinearLayout
@@ -17,6 +17,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginLeft="15dp"
             android:textSize="20sp"
+
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:textStyle="bold"
@@ -46,30 +47,35 @@
 
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_width="390dp"
+        android:layout_height="50dp"
+        android:background="#ffffff"
+        android:layout_marginTop="10dp"
         android:orientation="vertical">
 
         <EditText
             android:layout_marginLeft="15dp"
             android:id="@+id/note_title"
-            android:maxLength="30"
+            android:maxLength="27"
+            android:background="@null"
+            android:textSize="20dp"
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Note Title" />
+            android:hint="Enter Note Title..." />
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="400dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/cutomborder">
+        android:layout_width="390dp"
+        android:layout_height="480dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
 
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:background="#ffffff"
+            android:layout_height="480dp"
             android:fillViewport="true">
 
 
@@ -78,15 +84,16 @@
             android:id="@+id/note_details"
             android:inputType="textMultiLine"
             android:lines="20"
+android:layout_marginTop="5dp"
             android:minLines="6"
             android:gravity="top|left"
-            android:maxLines="120"
-
-            android:layout_height="500dp"
+            android:maxLines="80"
+            android:textSize="20dp"
+            android:layout_height="480dp"
             android:layout_width="match_parent"
             android:scrollbars="vertical"
             android:background="@null"
-            android:hint="Note Details"
+            android:hint=" Enter Note Details..."
         />
         </ScrollView>
     </LinearLayout>

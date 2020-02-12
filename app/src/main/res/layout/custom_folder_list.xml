@@ -5,54 +5,35 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-  >
+    android:background="#F7F3F3">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        app:cardCornerRadius="15dp"
-        app:cardMaxElevation="5dp"
-        android:layout_margin="5dp"
+        android:layout_height="80dp"
         android:orientation="vertical"
         android:background="#ffffff"
         android:divider="#000000"
         android:padding="10dp">
 
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_marginTop="10dp"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/bluenote" />
 
         <TextView
-            android:id="@+id/nTitle"
+            android:id="@+id/foldername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:text="Note Title"
-            android:layout_marginTop="10dp"
+            android:text="Folder Name"
+            android:layout_marginTop="20dp"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginLeft="80dp"/>
 
         <TextView
-            android:id="@+id/nDate"
+            android:id="@+id/count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-
+            android:layout_marginTop="20dp"
             android:textSize="15sp"
-            android:layout_marginLeft="80dp"
-            android:text="07/02/2020" />
-
-        <TextView
-            android:id="@+id/nTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:textSize="15sp"
-            android:layout_marginLeft="230dp"
+            android:layout_marginLeft="350dp"
             android:text="04:40" />
     </androidx.cardview.widget.CardView>
 

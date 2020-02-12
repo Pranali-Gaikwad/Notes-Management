@@ -124,8 +124,4 @@ public int editNote(Notes n)
   return db.update(DATABASE_TABLE, contentValues, COLOUM_ID+"=?",new String[]{String.valueOf(n.get_id())});
 }
 
-
-
-
-
 }
