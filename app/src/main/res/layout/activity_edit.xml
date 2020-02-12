@@ -7,7 +7,7 @@
     android:background="#ffffff"
     android:gravity="center">
     <Button
-        android:id="@+id/saveDataButton"
+        android:id="@+id/saveEditButton"
         android:layout_marginTop="10dp"
         android:layout_width="70dp"
         android:layout_height="40dp"
@@ -21,14 +21,15 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="vertical">
 
 
         <EditText
             android:id="@+id/note_title"
-            android:layout_marginTop="10dp"
+
             android:maxLength="25"
+            android:layout_marginLeft="15dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Note Title" />
@@ -37,6 +38,7 @@
 
     <LinearLayout
         android:layout_width="400dp"
+        android:layout_marginTop="5dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/cutomborder">
@@ -53,7 +55,7 @@
             android:minLines="6"
             android:gravity="top|left"
             android:maxLines="120"
-            android:layout_marginTop="10dp"
+
             android:layout_height="500dp"
             android:layout_width="match_parent"
             android:scrollbars="vertical"

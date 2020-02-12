@@ -40,6 +40,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         holder.nDate1.setText(notes.get(position).get_dateOfCreation());
         holder.nTime1.setText(notes.get(position).get_time());
 
+
     }
 
     @Override

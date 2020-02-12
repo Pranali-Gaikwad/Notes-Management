@@ -46,11 +46,9 @@ public class Details extends AppCompatActivity {
 
         d.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                        database.deleteNote(notes.get_id());
-                        Toast.makeText(getApplicationContext(),"Note Successfully Deleted",Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
 
-
+                AlertDialog diaBox = AskOption();
+                diaBox.show();
                     }
                                 });
 
@@ -70,6 +68,38 @@ public class Details extends AppCompatActivity {
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private AlertDialog AskOption()
+    {
+        AlertDialog myQuittingDialogBox = new AlertDialog.Builder(this)
+                // set message, title, and icon
+                .setTitle("Delete Note")
+                .setMessage("Delete this note?")
+
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        //your deleting code
+                        database.deleteNote(notes.get_id());
+                        Toast.makeText(getApplicationContext(),"Note Successfully Deleted",Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+
+
+                        dialog.dismiss();
+                    }
+
+                })
+                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        dialog.dismiss();
+
+                    }
+                })
+                .create();
+
+        return myQuittingDialogBox;
     }
 
 }

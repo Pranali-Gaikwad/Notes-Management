@@ -144,14 +144,14 @@ public class AddActivity extends AppCompatActivity {
 
     }
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-       if (item.getItemId() == R.id.save) {
+      /* if (item.getItemId() == R.id.save) {
             NotesManagementDatabase db=new NotesManagementDatabase(this);
             db.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate, currentTime));
             Toast.makeText(this,"Note Successfully Saved", Toast.LENGTH_SHORT).show();
             gotoMain();
 
 
-        }
+        }*/
         if (item.getItemId() == R.id.delete) {
 
             Toast.makeText(this,"Note not save", Toast.LENGTH_SHORT).show();

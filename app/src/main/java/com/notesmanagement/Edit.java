@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import java.util.Calendar;
@@ -20,6 +23,7 @@ public class Edit extends AppCompatActivity {
     String todaysDate;
     String currentTime;
     NotesManagementDatabase db;
+    Button edit;
     Notes n;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +38,40 @@ public class Edit extends AppCompatActivity {
 
         noteTitle=findViewById(R.id.note_title);
         noteDetails=findViewById(R.id.note_details);
+
+        edit=(Button)findViewById(R.id.saveEditButton);
         getSupportActionBar().setTitle(n.get_title());
         noteTitle.setText(n.get_title());
         noteDetails.setText(n.get_content());
+
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if((!isEmpty(noteTitle)) || (!isEmpty(noteDetails))){
+                    n.set_title(noteTitle.getText().toString());
+                    n.set_content(noteDetails.getText().toString());
+                    n.set_dateOfCreation(todaysDate);
+                    n.set_time(currentTime);
+                    int i=db.editNote(n);
+                    if(i==n.get_id())
+                    {}
+                    else {
+                        Toast.makeText(v.getContext(), "Note Update Successfully", Toast.LENGTH_SHORT).show();
+                    }}
+
+                else {
+                    Toast.makeText(v.getContext(), "Empty Note can not be Save Successfully", Toast.LENGTH_SHORT).show();
+                    }
+
+                    Intent intent=new Intent(getApplicationContext(), MainActivity.class);
+                    intent.putExtra("ID", n.get_id());
+                    startActivity(intent);
+
+
+                }
+
+
+        });
 
 
 
@@ -83,7 +118,7 @@ public class Edit extends AppCompatActivity {
 
     }
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.save) {
+       /* if (item.getItemId() == R.id.save) {
             if(noteTitle.getText()!= null){
                 n.set_title(noteTitle.getText().toString());
                 n.set_content(noteDetails.getText().toString());
@@ -102,10 +137,10 @@ public class Edit extends AppCompatActivity {
 
             }
 
-        }
+        }*/
         if (item.getItemId() == R.id.delete) {
 
-            Toast.makeText(this,"Note not save", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Note not Update Successfully", Toast.LENGTH_SHORT).show();
             gotoMain();
         }
         return super.onOptionsItemSelected(item);
@@ -117,6 +152,12 @@ public class Edit extends AppCompatActivity {
     }
     public void onBackPressed(){
         super.onBackPressed();
+
+    }
+    boolean isEmpty(EditText text)
+    {
+        CharSequence str= text.getText().toString();
+        return TextUtils.isEmpty(str);
 
     }
 }
