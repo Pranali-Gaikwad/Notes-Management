@@ -150,6 +150,4 @@ public class AddActivity extends AppCompatActivity {
         return TextUtils.isEmpty(str);
 
     }
-
-
 }

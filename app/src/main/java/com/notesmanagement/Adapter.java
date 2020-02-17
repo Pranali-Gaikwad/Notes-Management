@@ -2,9 +2,15 @@ package com.notesmanagement;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
@@ -18,7 +24,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
      private LayoutInflater inflater;
     private List<Notes> notes;
     private List<Notes> notelistAll;
-    Adapter(Context context, List<Notes> notes)
+
+
+    public  Adapter(Context context, List<Notes> notes)
     {
         this.inflater=LayoutInflater.from(context);
         this.notes=notes;
@@ -33,7 +41,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
     }
 
     @Override
-    public void onBindViewHolder(@NonNull Adapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final Adapter.ViewHolder holder, int position) {
 
         holder.nTitle1.setText(notes.get(position).get_title());
         holder.nDate1.setText(notes.get(position).get_dateOfCreation());
@@ -42,6 +50,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
 
     }
 
+//Android Beginner Tutorial #28 - Swipe ListView Tutorial
     @Override
     public int getItemCount() {
         return notes.size();
@@ -65,13 +74,22 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
                 Notes n=new Notes();
 
                 for ( Notes n1 : notelistAll){
-                    if (n1.get_title().toLowerCase().contains(constraint.toString().toLowerCase()))
+                    if (n1.get_title().toLowerCase().contains(constraint.toString().toLowerCase())
+                    || n1.get_content().toLowerCase().contains(constraint.toString().toLowerCase()) )
                     {
                         filteredlist.add(n1);
+                       /* Paint p = new Paint();
+
+                        SpannableString ss=  new SpannableString(n1.get_title());
+                        ss.setSpan(new ForegroundColorSpan(Color.GREEN), 0, 5, 0);
+*/
+
+
                     }
 
                 }
             }
+
             FilterResults filterResults = new FilterResults();
             filterResults.values = filteredlist;
             return filterResults;
@@ -87,6 +105,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
 
 
     public  class ViewHolder extends RecyclerView.ViewHolder{
+
+       /* public TwoStatePreference checkbox;*/
+        CheckBox checkbox1;
         TextView nTitle1, nDate1, nTime1;
 
 
@@ -96,6 +117,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
             nTitle1 =(TextView) itemView.findViewById(R.id.nTitle);
             nDate1 = (TextView) itemView.findViewById(R.id.nDate);
             nTime1 =(TextView)  itemView.findViewById(R.id.nTime);
+            checkbox1=(CheckBox) itemView.findViewById(R.id.checkbox);
+          //  checkbox1.setClickable(false);
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -108,5 +132,9 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
 
 
         }
+
+
+
     }
+
 }

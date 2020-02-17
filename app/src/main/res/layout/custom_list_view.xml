@@ -4,13 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-  >
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        app:cardCornerRadius="15dp"
+        android:layout_height="85dp"
+
         app:cardMaxElevation="5dp"
         android:layout_margin="5dp"
         android:orientation="vertical"
@@ -29,7 +28,6 @@
             android:id="@+id/nTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:text="Note Title"
             android:layout_marginTop="10dp"
             android:textSize="20sp"
@@ -41,7 +39,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
-
             android:textSize="15sp"
             android:layout_marginLeft="80dp"
             android:text="07/02/2020" />
@@ -54,6 +51,8 @@
             android:textSize="15sp"
             android:layout_marginLeft="230dp"
             android:text="04:40" />
+
+
     </androidx.cardview.widget.CardView>
 
 

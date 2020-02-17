@@ -37,6 +37,7 @@ Button b;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_folders);
 
+       // b=(Button)findViewById(R.id.)
         ActionBar actionBar=getSupportActionBar();
         if (actionBar != null)
         {
@@ -67,13 +68,13 @@ Button b;
             }
 
         });
-        b.setOnClickListener(new View.OnClickListener() {
+       /* b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
             openBox();
             }
         });
-
+*/
 
     }
 
