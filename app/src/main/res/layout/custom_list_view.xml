@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:id="@+id/linearLayout">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="85dp"
-
+        android:id="@+id/cardView"
         app:cardMaxElevation="5dp"
         android:layout_margin="5dp"
         android:orientation="vertical"
@@ -51,6 +52,14 @@
             android:textSize="15sp"
             android:layout_marginLeft="230dp"
             android:text="04:40" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/chk"
+            android:layout_marginTop="45dp"
+            android:layout_marginLeft="340dp"/>
+
 
 
     </androidx.cardview.widget.CardView>

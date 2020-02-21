@@ -20,11 +20,17 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -34,17 +40,23 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnLongClickListener{
     RecyclerView recyclerView;
     Adapter adapter;
     List<Notes> notes;
     Button addition;
     Notes notes1;
-    List<Notes> ids;
-
+    private ActionMode mactionMode;
+    RelativeLayout layout;
     NotesManagementDatabase database;
     List<CheckBox> c;
+    Menu context_menu;
+    boolean isMultiSelect = false;
+    List<Notes> toDelete;
 
+    boolean is_in_action_mode= false;
+    TextView counter;
+    int count=0;
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_resource, menu);
@@ -67,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
 
     }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient));
         }
 
-
+        layout= findViewById(R.id.main);
         recyclerView = findViewById(R.id.review);
         NotesManagementDatabase db1 = new NotesManagementDatabase(this);
 
@@ -88,11 +98,11 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new Adapter(this, notes);
+        toDelete=new ArrayList<>();
 
         recyclerView.setAdapter(adapter);
 
         Collections.reverse(notes);
-
         addition = (Button) findViewById(R.id.additionButton);
 
         addition.setOnClickListener(new View.OnClickListener() {
@@ -104,36 +114,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         enableSwipe();
-       /* new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT |ItemTouchHelper.LEFT ) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
-
-                notes.remove(viewHolder.getAdapterPosition());
-                adapter.notifyDataSetChanged();
-
-                Snackbar snackbar=Snackbar.make(getWindow().getDecorView().getRootView(), "Removed from list", Snackbar.LENGTH_LONG );
-                snackbar.setAction("UNDO", new View.OnClickListener() {
-                            public void onClick(View view) {
-
-
-                            }
-                        });
-
-                snackbar.setActionTextColor(Color.YELLOW);
-                snackbar.show();
-
-                Toast.makeText(MainActivity.this,"item "+viewHolder.getAdapterPosition(),Toast.LENGTH_SHORT).show();
-            }
-        }).attachToRecyclerView(recyclerView);
-*/
-
-
     }
 
 
@@ -166,35 +146,14 @@ public class MainActivity extends AppCompatActivity {
                         c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
                                 (float) itemView.getRight(), (float) itemView.getBottom(), p);
 
-
-
-                        // icon : left side (swiping towards right)
-/*
-                    c.drawBitmap(icon,
-                            (float) itemView.getLeft() + convertDpToPx(16),
-                            (float) itemView.getTop() + ((float) itemView.getBottom() - (float) itemView.getTop() - height) / 2,
-                            p);*/
-                } else {
+                    } else {
 
                     icon = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.ic_delete_black_24dp);
-                    //color : right side (swiping towards left)
-
-                        p.setARGB(255, 150,166 ,216 );
-
-
-                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                    p.setARGB(255, 150,166 ,216 );
+                    c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
                             (float) itemView.getRight(), (float) itemView.getBottom(), p);
-
-                    //icon : left side (swiping towards right)
-
-                    /*c.drawBitmap(icon,
-                            (float) itemView.getRight() - convertDpToPx(16) - width,
-                            (float) itemView.getTop() + ((float) itemView.getBottom() - (float) itemView.getTop() - height) / 2,
-                            p);*/
-                }
-
-                // Fade out the view when it is swiped out of the parent
-                final float alpha = ALPHA_FULL - Math.abs(dX) / width;
+                    }
+                    final float alpha = ALPHA_FULL - Math.abs(dX) / width;
                 viewHolder.itemView.setAlpha(alpha);
                 viewHolder.itemView.setTranslationX(dX);
             } else {
@@ -211,16 +170,21 @@ public class MainActivity extends AppCompatActivity {
         public void onSwiped (@NonNull RecyclerView.ViewHolder viewHolder,int direction){
 
             final int position = viewHolder.getAdapterPosition();
-
             if (direction == ItemTouchHelper.LEFT) {
+                final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
+                final Notes temp=notes.get(position);
+                final Notes recover=notes.get(position);
+              //  notes.remove(position);
 
-               notes.remove(position);
+                db.deleteNote(temp.get_id());
                 adapter.notifyItemRemoved(position);
-                Toast.makeText(getApplicationContext(), "swiped to left", Toast.LENGTH_SHORT).show();
-                Snackbar snackbar = Snackbar.make(getWindow().getDecorView().getRootView(), "Removed from list", Snackbar.LENGTH_LONG);
+              //  Toast.makeText(getApplicationContext(), "swiped to left", Toast.LENGTH_SHORT).show();
+                Snackbar snackbar = Snackbar.make(layout, "Removed from list", Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     public void onClick(View view) {
-
+                     //  notes.add(position,recover);
+                        db.addNoteInDatabase(recover);
+                       adapter.notifyItemInserted(position);
 
                     }
                 });
@@ -229,13 +193,18 @@ public class MainActivity extends AppCompatActivity {
                 snackbar.show();
 
             } else if (direction == ItemTouchHelper.RIGHT) {
-                notes.remove(position);
+                final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
+                final Notes temp=notes.get(position);
+                final Notes recover=notes.get(position);
+                db.deleteNote(temp.get_id());
                 adapter.notifyItemRemoved(position);
-                Toast.makeText(getApplicationContext(), "swiped to right", Toast.LENGTH_SHORT).show();
-                Snackbar snackbar = Snackbar.make(getWindow().getDecorView().getRootView(), "Removed from list", Snackbar.LENGTH_LONG);
+                //  Toast.makeText(getApplicationContext(), "swiped to left", Toast.LENGTH_SHORT).show();
+                Snackbar snackbar = Snackbar.make(layout, "Removed from list", Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     public void onClick(View view) {
-
+                        //  notes.add(position,recover);
+                        db.addNoteInDatabase(recover);
+                        adapter.notifyItemInserted(position);
 
                     }
                 });
@@ -251,10 +220,8 @@ public class MainActivity extends AppCompatActivity {
 
 }
 
-
-
-
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    {
         if (item.getItemId() == R.id.folder) {
             Intent intent=new Intent(this, Folders.class);
             startActivity(intent);
@@ -299,7 +266,105 @@ public class MainActivity extends AppCompatActivity {
         return myQuittingDialogBox;
     }
 
+    @Override
+    public boolean onLongClick(View v) {
+
+        if (mactionMode != null) {
+            return false;
+        }
+        mactionMode = v.startActionMode(actionModeCallbacks);
+        v.setSelected(true);
+
+        is_in_action_mode=true;
+        adapter.notifyDataSetChanged();
+
+        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
+        return true;
 
 
+
+    }
+    private ActionMode.Callback actionModeCallbacks = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.delete_hidden, menu);
+            mode.setTitle("0 Notes Selected");
+            return  true;
+
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.delete_hidden:
+                    Log.d("delete","pressed");
+                    is_in_action_mode=false;
+                    for (Notes n: toDelete)
+                    {
+                        notes.remove(n);
+                        adapter.notifyDataSetChanged();
+                    }
+
+                    // Toast.makeText("this","Pressed",Toast.LENGTH_SHORT).show();
+                    mode.finish(); // Action picked, so close the CAB
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            onBackPressed();
+     }
+
+
+    };
+
+    public void prepareSelection(View view, int position){
+        if (((CheckBox)view).isChecked()){
+            toDelete.add(notes.get(position));
+            count=count+1;
+            updateCounter(count);
+        }
+        else {
+            toDelete.remove(notes.get(position));
+            count=count-1;
+            updateCounter(count);
+        }
+
+    }
+
+    public void updateCounter(int c){
+        if (count==0){
+
+           // mactionMode.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient));
+            mactionMode.setTitle("0 Notes selected");
+        }
+        else {
+            mactionMode.setTitle(count+ " Notes selected");
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        count=0;
+
+       is_in_action_mode = false;
+       toDelete.clear();
+       mactionMode = null;
+       adapter.notifyDataSetChanged();
+
+   // super.onBackPressed();
 }
+
+
+    }
+
+
 
