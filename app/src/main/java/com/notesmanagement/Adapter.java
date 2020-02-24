@@ -2,16 +2,6 @@ package com.notesmanagement;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.preference.MultiSelectListPreference;
-import android.provider.ContactsContract;
-import android.text.Editable;
-import android.text.SpannableString;
-import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.MenuInflater;
 import android.widget.FrameLayout;
@@ -26,7 +16,6 @@ import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -47,42 +36,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
     private boolean multiSelect = false;
 
     private List<Notes> selectedItems = new ArrayList<>();
-
-   /* private ActionMode.Callback actionModeCallbacks = new ActionMode.Callback() {
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            mode.getMenuInflater().inflate(R.menu.delete_hidden, menu);
-            mode.setTitle("0 Notes Selected");
-            return  true;
-
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
-        }
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.delete_hidden:
-                    Log.d("delete","pressed");
-                   // Toast.makeText("this","Pressed",Toast.LENGTH_SHORT).show();
-                    mode.finish(); // Action picked, so close the CAB
-                    return true;
-                default:
-                    return false;
-            }
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-          mactionMode = null;
-        }
-    };
-
-*/
-
 
     public Adapter(Context context, List<Notes> notes) {
         this.inflater = LayoutInflater.from(context);
@@ -113,7 +66,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
             holder.checkBox.setChecked(false);
         }
 
-        //holder.update(notes.get(position));
     }
 
     @Override
@@ -160,7 +112,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
     };
 
 
-
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView nTitle1, nDate1, nTime1;
         LinearLayout layout;
@@ -190,57 +141,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
 
                 }
             });
-           /* itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if (mactionMode != null) {
-                        return false;
-                    }
-                    mactionMode = v.startActionMode(actionModeCallbacks);
-                    v.setSelected(true);
-                    return true;
-
-                }
-            });
-        }*/
-       /* void selectItem(Notes n){
-            if (multiSelect)
-            {
-                if (selectedItems.contains(n))
-                {
-                    selectedItems.remove(n);
-                    layout.setBackgroundColor(Color.BLUE);
-                }else {
-                    selectedItems.add(n);
-                    layout.setBackgroundColor(Color.CYAN);
-                }
-            }
-        }*/
-
-
-       /* void update(final Notes notes){
-
-            if (selectedItems.contains(notes)){
-              layout.setBackgroundColor(Color.GREEN);
-            }else {
-                layout.setBackgroundColor(Color.GRAY);
-            }
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    ((AppCompatActivity) v.getContext()).startSupportActionMode((androidx.appcompat.view.ActionMode.Callback) actionModeCallbacks);
-
-                    selectItem(notes);
-                    return true;
-                }
-            });
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    selectItem(notes);
-                }
-            });
-*/
         }
 
         @Override

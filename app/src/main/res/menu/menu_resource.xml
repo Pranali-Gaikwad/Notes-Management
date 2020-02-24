@@ -3,11 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <item
-        android:id="@+id/deletelist"
-        android:icon="@drawable/ic_delete_black_24dp"
-        android:title="Item"
-        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/folder"
         android:icon="@drawable/ic_folder_black_24dp"

@@ -50,12 +50,10 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     RelativeLayout layout;
     NotesManagementDatabase database;
     List<CheckBox> c;
-    Menu context_menu;
-    boolean isMultiSelect = false;
     List<Notes> toDelete;
 
     boolean is_in_action_mode= false;
-    TextView counter;
+
     int count=0;
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -174,15 +172,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
                 final Notes temp=notes.get(position);
                 final Notes recover=notes.get(position);
-              //  notes.remove(position);
-
                 db.deleteNote(temp.get_id());
                 adapter.notifyItemRemoved(position);
-              //  Toast.makeText(getApplicationContext(), "swiped to left", Toast.LENGTH_SHORT).show();
+
                 Snackbar snackbar = Snackbar.make(layout, "Removed from list", Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     public void onClick(View view) {
-                     //  notes.add(position,recover);
                         db.addNoteInDatabase(recover);
                        adapter.notifyItemInserted(position);
 
@@ -198,14 +193,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 final Notes recover=notes.get(position);
                 db.deleteNote(temp.get_id());
                 adapter.notifyItemRemoved(position);
-                //  Toast.makeText(getApplicationContext(), "swiped to left", Toast.LENGTH_SHORT).show();
                 Snackbar snackbar = Snackbar.make(layout, "Removed from list", Snackbar.LENGTH_LONG);
                 snackbar.setAction("UNDO", new View.OnClickListener() {
                     public void onClick(View view) {
-                        //  notes.add(position,recover);
                         db.addNoteInDatabase(recover);
                         adapter.notifyItemInserted(position);
-
                     }
                 });
 
@@ -226,12 +218,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             Intent intent=new Intent(this, Folders.class);
             startActivity(intent);
         }
-        if (item.getItemId()==R.id.deletelist)
-        {
 
-            AlertDialog diaBox = AskOption();
-            diaBox.show();
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -246,7 +233,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         for (CheckBox d: c)
                         {
                             if(d.isChecked()){
-                                //notes1=new ArrayList<Notes>(notes);
                                 database.deleteNote(notes1.get_id());
                             }
                         }
@@ -287,6 +273,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private ActionMode.Callback actionModeCallbacks = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+
+
             mode.getMenuInflater().inflate(R.menu.delete_hidden, menu);
             mode.setTitle("0 Notes Selected");
             return  true;
@@ -310,8 +298,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         adapter.notifyDataSetChanged();
                     }
 
-                    // Toast.makeText("this","Pressed",Toast.LENGTH_SHORT).show();
-                    mode.finish(); // Action picked, so close the CAB
+
+                    mode.finish();
                     return true;
                 default:
                     return false;
@@ -322,8 +310,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         public void onDestroyActionMode(ActionMode mode) {
             onBackPressed();
      }
-
-
     };
 
     public void prepareSelection(View view, int position){
@@ -362,9 +348,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
    // super.onBackPressed();
 }
-
-
-    }
+}
 
 
 
