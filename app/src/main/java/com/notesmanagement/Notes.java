@@ -7,7 +7,8 @@ public class Notes {
     private String _dateOfCreation;
     private String _time;
 
-    Notes(){}
+    Notes() {
+    }
 
     public Notes(String title, String content, String dateOfCreation, String time) {
         this._title = title;

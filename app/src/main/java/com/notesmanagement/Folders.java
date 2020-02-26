@@ -1,13 +1,5 @@
 package com.notesmanagement;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,12 +11,15 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class Folders extends AppCompatActivity {
 
-Button b;
+    Button b;
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.folder_setting, menu);
@@ -37,10 +32,9 @@ Button b;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_folders);
 
-       // b=(Button)findViewById(R.id.)
-        ActionBar actionBar=getSupportActionBar();
-        if (actionBar != null)
-        {
+        // b=(Button)findViewById(R.id.)
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
             actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient));
         }
 
@@ -58,33 +52,23 @@ Button b;
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String clickedItem=(String) list.getItemAtPosition(position);
-                if (clickedItem.equals("All Notes"))
-                {
-                    Intent intent=new Intent(Folders.this, MainActivity.class);
+                String clickedItem = (String) list.getItemAtPosition(position);
+                if (clickedItem.equals("All Notes")) {
+                    Intent intent = new Intent(Folders.this, MainActivity.class);
                     startActivity(intent);
                 }
-                Toast.makeText(Folders.this,clickedItem,Toast.LENGTH_LONG).show();
+                Toast.makeText(Folders.this, clickedItem, Toast.LENGTH_LONG).show();
             }
 
         });
-       /* b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            openBox();
-            }
-        });
-*/
+
 
     }
 
-    private void openBox() {
-
-    }
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.setting) {
-            Intent intent=new Intent(this, Settings.class);
+            Intent intent = new Intent(this, Settings.class);
             startActivity(intent);
 
 
