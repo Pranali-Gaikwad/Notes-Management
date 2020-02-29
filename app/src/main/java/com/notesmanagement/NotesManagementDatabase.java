@@ -101,10 +101,11 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
     }
 
 
-    public void deleteNote(long id) {
+    public Long deleteNote(long id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(DATABASE_TABLE, COLOUM_ID + "=?", new String[]{String.valueOf(id)});
         db.close();
+        return id;
     }
 
     public int editNote(Notes n) {

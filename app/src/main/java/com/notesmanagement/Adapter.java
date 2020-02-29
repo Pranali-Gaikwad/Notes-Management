@@ -1,6 +1,7 @@
 package com.notesmanagement;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,14 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements Filterable {
 
     private LayoutInflater inflater;
     private List<Notes> notelistAll;
-
+    private List<Notes> selectedItems = new ArrayList<>();
     Context context;
     private List<Notes> notes = new ArrayList<>();
     Filter filter = new Filter() {
@@ -29,15 +31,17 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
 
             List<Notes> filteredlist = new ArrayList<>();
 
+
             if ((constraint.toString().isEmpty())) {
                 filteredlist.addAll(notelistAll);
-            } else {
-                Notes n = new Notes();
+                Log.d("list", "all list " +notelistAll);
+                Collections.reverse(notes);
 
+            } else {
                 for (Notes n1 : notelistAll) {
                     if (n1.get_title().toLowerCase().contains(constraint.toString().toLowerCase())
                             || n1.get_content().toLowerCase().contains(constraint.toString().toLowerCase())) {
-                        filteredlist.add(n1);
+                             filteredlist.add(n1);
                     }
 
                 }
@@ -50,21 +54,21 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            notes.clear();
+
+           notes.clear();
             notes.addAll((Collection<? extends Notes>) results.values);
             notifyDataSetChanged();
+            Collections.reverse(notes);
+
         }
     };
-    private List<Notes> selectedItems = new ArrayList<>();
+
 
     public Adapter(Context context, List<Notes> notes, List<Notes> selectedItems) {
         this.inflater = LayoutInflater.from(context);
         this.notes = notes;
         this.selectedItems = selectedItems;
         this.notelistAll = new ArrayList<>(notes);
-
-
-
     }
 
     @NonNull
@@ -80,8 +84,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         holder.nTitle1.setText(notes.get(position).get_title());
         holder.nDate1.setText(notes.get(position).get_dateOfCreation());
         holder.nTime1.setText(notes.get(position).get_time());
-
-
     }
 
 
@@ -107,6 +109,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
             nTime1 = itemView.findViewById(R.id.nTime);
             layout = itemView.findViewById(R.id.linearLayout);
             cardView= itemView.findViewById(R.id.cardView);
+
         }
     }
 

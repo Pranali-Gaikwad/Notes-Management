@@ -8,6 +8,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -30,6 +32,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -37,17 +40,20 @@ import java.util.Collections;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     Adapter adapter;
     List<Notes> notes = new ArrayList<>();
-   List<Notes> multiselect_list = new ArrayList<>();
+    List<Notes> multiselect_list = new ArrayList<>();
     Button addition;
     Notes notes1;
     RelativeLayout layout;
     NotesManagementDatabase database;
-    List<CheckBox> c;
+
     int selectedPos;
+
+    private Paint p = new Paint();
+
 
     private List<Long> selectedIds = new ArrayList<>();
     boolean isMultiSelect = false;
@@ -80,14 +86,15 @@ public class MainActivity extends AppCompatActivity  {
                         final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
 
                         for (int i = 0; i < multiselect_list.size(); i++) {
-
-                            db.deleteNote(multiselect_list.get(i).get_id());
-                           notes.remove(multiselect_list.get(i));
-                            adapter.notifyItemRemoved(i);
+                            Long idToDelete = multiselect_list.get(i).get_id();
+                            notes.remove(multiselect_list.get(i));
+                            Long a = db.deleteNote(idToDelete);
+                            Log.d("delete", "  " + a);
+                            adapter.notifyDataSetChanged();
                         }
 
-                        adapter.notifyDataSetChanged();
                         mode.finish();
+
                     }
                     return true;
                 default:
@@ -102,6 +109,7 @@ public class MainActivity extends AppCompatActivity  {
             isMultiSelect = false;
             adapter.notifyDataSetChanged();
             addition.setVisibility(View.VISIBLE);
+
             layout.setBackgroundColor(Color.parseColor("#F7F3F3"));
             onBackPressed();
         }
@@ -110,6 +118,7 @@ public class MainActivity extends AppCompatActivity  {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_resource, menu);
         MenuItem menuItem = menu.findItem(R.id.search);
+
         SearchView searchView = (SearchView) menuItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -153,13 +162,49 @@ public class MainActivity extends AppCompatActivity  {
         recyclerView.setAdapter(adapter);
 
 
+        MySwipeHelper swipeHelper=new MySwipeHelper(this, recyclerView,200) {
+            @Override
+            public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<MySwipeHelper.MyButton> buffer) {
+
+                buffer.add(new MyButton(MainActivity.this,
+                        "delete",
+                        30,
+                        0,
+                        Color.parseColor("#ff3c30"),
+                        new  MyButtonClickListner(){
+                            @Override
+                            public void onClick(int pos) {
+
+                                Toast.makeText(MainActivity.this, "Delete", Toast.LENGTH_SHORT).show();
+                            }
+                        }));
+
+                buffer.add(new MyButton(MainActivity.this,
+                        "delete",
+                        30,
+                        R.drawable.ic_mode_edit_black_24dp,
+                        Color.parseColor("#ff3c30"),
+                        new  MyButtonClickListner(){
+                            @Override
+                            public void onClick(int pos) {
+
+                                Toast.makeText(MainActivity.this, "Edit", Toast.LENGTH_SHORT).show();
+                            }
+                        }));
+            }
+        };
+
+
+
+
+
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
 
             @Override
             public void onItemClick(View view, int position) {
                 if (isMultiSelect) {
-               addition.setVisibility(View.GONE);
-               selectedPos=position;
+                    addition.setVisibility(View.GONE);
+                    selectedPos = position;
                     multi_select(position, view);
 
                 } else {
@@ -174,11 +219,11 @@ public class MainActivity extends AppCompatActivity  {
             public void onItemLongClick(View view, int position) {
 
                 if (!isMultiSelect) {
-                    selectedIds=new ArrayList<Long>();
+                    selectedIds = new ArrayList<Long>();
                     multiselect_list = new ArrayList<Notes>();
                     isMultiSelect = true;
                     addition.setVisibility(View.GONE);
-                     selectedPos=position;
+                    selectedPos = position;
 
                     if (mactionMode == null) {
                         mactionMode = startActionMode(actionModeCallbacks);
@@ -202,7 +247,7 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
 
-        enableSwipe();
+       // enableSwipe();
     }
 
     public void multi_select(int position, View view) {
@@ -210,15 +255,13 @@ public class MainActivity extends AppCompatActivity  {
 
         if (mactionMode != null) {
             if (multiselect_list.contains(notes.get(position))) {
-                multiselect_list.remove(notes.get(position));
-
+                multiselect_list.remove((notes.get(position)));
                 view.setBackgroundColor(Color.parseColor("#F7F3F3"));
             } else {
-                if (selectedPos==position) {
+                if (selectedPos == position) {
                     multiselect_list.add(notes.get(position));
                     view.setBackgroundColor(Color.parseColor("#8bcfed"));
-                }
-                else {
+                } else {
                     view.setBackgroundColor(Color.parseColor("#F7F3F3"));
                 }
             }
@@ -229,60 +272,31 @@ public class MainActivity extends AppCompatActivity  {
                 mactionMode.setTitle("Select Notes");
 
             }
+
         }
 
 
     }
+
     private void enableSwipe() {
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-          public static final float ALPHA_FULL = 1.0f;
+            public static final float ALPHA_FULL = 1.0f;
 
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
                 return false;
             }
-
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
-                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-
-                    View itemView = viewHolder.itemView;
-                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
-                    float width = height / 3;
-
-                    Paint p = new Paint();
-
-                    if (dX > 0) {
-
-                        p.setARGB(255, 150, 166, 216);
-
-                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
-                                (float) itemView.getRight(), (float) itemView.getBottom(), p);
-
-                    } else {
-
-                        p.setARGB(255, 150, 166, 216);
-                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
-                                (float) itemView.getRight(), (float) itemView.getBottom(), p);
-                    }
-                    final float alpha = ALPHA_FULL - Math.abs(dX) / width;
-                    viewHolder.itemView.setAlpha(alpha);
-                    viewHolder.itemView.setTranslationX(dX);
-                } else {
-                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                }
-
-            }
-
             @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            public void onSwiped (@NonNull RecyclerView.ViewHolder viewHolder,int direction){
 
                 final int position = viewHolder.getAdapterPosition();
-                if (direction == ItemTouchHelper.LEFT || direction == ItemTouchHelper.RIGHT ) {
+                if (direction == ItemTouchHelper.LEFT || direction == ItemTouchHelper.RIGHT) {
                     final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
                     final Notes temp = notes.get(position);
                     final Notes recover = notes.get(position);
-                    db.deleteNote(temp.get_id());
+                    long a = db.deleteNote(temp.get_id());
+                    notes.remove(position);
+                    Log.d("snackbar", "addition" + a);
                     adapter.notifyItemRemoved(position);
 
                     Snackbar snackbar = Snackbar.make(layout, "Removed from list", Snackbar.LENGTH_LONG);
@@ -291,21 +305,50 @@ public class MainActivity extends AppCompatActivity  {
                             db.addNoteInDatabase(recover);
                             adapter.notifyItemInserted(position);
 
+
                         }
                     });
-
                     snackbar.setActionTextColor(Color.YELLOW);
                     snackbar.show();
 
 
                 }
             }
+
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                Bitmap icon;
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+
+                    View itemView = viewHolder.itemView;
+                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                    float width = height / 3;
+
+                    if (dX < 0) {
+                        p.setColor(Color.parseColor("#D32F2F"));
+                        RectF background = new RectF((float) itemView.getRight() + dX/4, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
+                        c.drawRect(background, p);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_black_24dp);
+                        RectF icon_dest = new RectF((float) itemView.getRight() - 2 * width, (float) itemView.getTop() + width, (float) itemView.getRight() - width, (float) itemView.getBottom() - width);
+                      //  c.drawBitmap(icon, null, icon_dest, p);
+
+                    }
+                }
+                super.onChildDraw(c, recyclerView, viewHolder, dX/4, dY, actionState, isCurrentlyActive);
+            }
         };
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+
+
+
+
+    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-    }
+}
+
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.folder) {
@@ -316,45 +359,18 @@ public class MainActivity extends AppCompatActivity  {
         return super.onOptionsItemSelected(item);
     }
 
-    private AlertDialog AskOption() {
-        AlertDialog myQuittingDialogBox = new AlertDialog.Builder(this)
-                .setTitle("Delete Note")
-                .setMessage("Delete this note?")
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        c = new ArrayList<CheckBox>();
-                        for (CheckBox d : c) {
-                            if (d.isChecked()) {
-                                database.deleteNote(notes1.get_id());
-                            }
-                        }
-
-                    }
-
-                })
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        dialog.dismiss();
-
-                    }
-                })
-                .create();
-
-        return myQuittingDialogBox;
-    }
-
 
 
 
     @Override
     public void onBackPressed() {
-        count = 0;
+
 
         is_in_action_mode = false;
         multiselect_list.clear();
         mactionMode = null;
         adapter.notifyDataSetChanged();
+        recyclerView.setBackgroundColor(Color.parseColor("#F7F3F3"));
 
     }
 

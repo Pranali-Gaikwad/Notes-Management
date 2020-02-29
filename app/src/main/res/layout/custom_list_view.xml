@@ -5,7 +5,6 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     android:id="@+id/linearLayout">
 
     <androidx.cardview.widget.CardView
@@ -24,7 +23,8 @@
             android:layout_marginTop="10dp"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/bluenote" />
+            android:src="@drawable/bluenote"
+      />
 
         <TextView
             android:id="@+id/nTitle"
@@ -53,15 +53,6 @@
             android:textSize="15sp"
             android:layout_marginLeft="230dp"
             android:text="04:40" />
-
-       <!-- <CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/chk"
-            android:layout_marginTop="45dp"
-            android:layout_marginLeft="340dp"/>
--->
-
 
     </androidx.cardview.widget.CardView>
 
