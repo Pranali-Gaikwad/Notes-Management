@@ -51,7 +51,7 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
     }
 
 
-    public void addNoteInDatabase(Notes notes) {
+    public Notes addNoteInDatabase(Notes notes) {
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLOUM_TITLE, notes.get_title());
@@ -63,6 +63,7 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
         long ID = db.insert(DATABASE_TABLE, null, contentValues);
         Log.d("inserted", " ID " + ID);
         db.close();
+        return notes;
 
     }
 
@@ -77,6 +78,8 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
         return new Notes(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
 
     }
+
+
 
 
     public List<Notes> getListOfNotes() {

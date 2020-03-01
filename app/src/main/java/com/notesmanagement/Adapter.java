@@ -1,6 +1,7 @@
 package com.notesmanagement;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,6 +85,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         holder.nTitle1.setText(notes.get(position).get_title());
         holder.nDate1.setText(notes.get(position).get_dateOfCreation());
         holder.nTime1.setText(notes.get(position).get_time());
+
+
     }
 
 

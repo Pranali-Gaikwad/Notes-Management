@@ -18,23 +18,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-
 import com.google.android.material.snackbar.Snackbar;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -46,19 +38,13 @@ public class MainActivity extends AppCompatActivity {
     List<Notes> notes = new ArrayList<>();
     List<Notes> multiselect_list = new ArrayList<>();
     Button addition;
-    Notes notes1;
     RelativeLayout layout;
-    NotesManagementDatabase database;
-
     int selectedPos;
 
+    long idToHighlight;
     private Paint p = new Paint();
-
-
     private List<Long> selectedIds = new ArrayList<>();
     boolean isMultiSelect = false;
-    boolean is_in_action_mode = false;
-    int count = 0;
     private ActionMode mactionMode;
     private ActionMode.Callback actionModeCallbacks = new ActionMode.Callback() {
         @Override
@@ -91,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
                             Long a = db.deleteNote(idToDelete);
                             Log.d("delete", "  " + a);
                             adapter.notifyDataSetChanged();
+                            
                         }
 
                         mode.finish();
@@ -109,8 +96,8 @@ public class MainActivity extends AppCompatActivity {
             isMultiSelect = false;
             adapter.notifyDataSetChanged();
             addition.setVisibility(View.VISIBLE);
-
             layout.setBackgroundColor(Color.parseColor("#F7F3F3"));
+            mactionMode = null;
             onBackPressed();
         }
     };
@@ -169,32 +156,51 @@ public class MainActivity extends AppCompatActivity {
                 buffer.add(new MyButton(MainActivity.this,
                         "delete",
                         30,
-                        0,
+                     R.drawable.ic_delete_black_24dp,
                         Color.parseColor("#ff3c30"),
                         new  MyButtonClickListner(){
                             @Override
-                            public void onClick(int pos) {
+                            public void onClick(final int pos) {
+                               final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
+                               long idToDelete = notes.get(pos).get_id();
+                               final Notes recover = db.getOneNote(idToDelete);
+                                db.deleteNote(idToDelete);
+                                notes.remove(pos);
+                                adapter.notifyItemRemoved(pos);
 
-                                Toast.makeText(MainActivity.this, "Delete", Toast.LENGTH_SHORT).show();
+                                Snackbar snackbar = Snackbar.make(layout, "Removed from list", Snackbar.LENGTH_LONG);
+                                snackbar.setAction("UNDO", new View.OnClickListener() {
+                                    public void onClick(View view) {
+                                        db.addNoteInDatabase(recover);
+                                         notes.add(pos,recover);
+                                         adapter.notifyItemInserted(pos);
+
+                                    }
+                                });
+                                snackbar.setActionTextColor(Color.YELLOW);
+                                snackbar.show();
+
+
                             }
                         }));
 
                 buffer.add(new MyButton(MainActivity.this,
-                        "delete",
+                        "edit",
                         30,
                         R.drawable.ic_mode_edit_black_24dp,
-                        Color.parseColor("#ff3c30"),
+                        Color.GREEN,
                         new  MyButtonClickListner(){
                             @Override
                             public void onClick(int pos) {
 
-                                Toast.makeText(MainActivity.this, "Edit", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(MainActivity.this, Edit.class);
+                                intent.putExtra("ID", notes.get(pos).get_id());
+                                startActivity(intent);
+
                             }
                         }));
             }
         };
-
-
 
 
 
@@ -204,8 +210,9 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(View view, int position) {
                 if (isMultiSelect) {
                     addition.setVisibility(View.GONE);
+                    idToHighlight=notes.get(position).get_id();
                     selectedPos = position;
-                    multi_select(position, view);
+                    multi_select(position, view, idToHighlight);
 
                 } else {
                     Intent intent = new Intent(view.getContext(), Details.class);
@@ -221,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!isMultiSelect) {
                     selectedIds = new ArrayList<Long>();
                     multiselect_list = new ArrayList<Notes>();
+                    idToHighlight=notes.get(position).get_id();
                     isMultiSelect = true;
                     addition.setVisibility(View.GONE);
                     selectedPos = position;
@@ -230,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 }
-                multi_select(position, view);
+                multi_select(position, view, idToHighlight);
 
             }
 
@@ -247,10 +255,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-       // enableSwipe();
     }
 
-    public void multi_select(int position, View view) {
+    public void multi_select(int position, View view, long idToHighlight) {
 
 
         if (mactionMode != null) {
@@ -258,9 +265,10 @@ public class MainActivity extends AppCompatActivity {
                 multiselect_list.remove((notes.get(position)));
                 view.setBackgroundColor(Color.parseColor("#F7F3F3"));
             } else {
-                if (selectedPos == position) {
+                if (idToHighlight == notes.get(position).get_id()) {
+
+                   view.setBackgroundColor(Color.parseColor("#8bcfed"));
                     multiselect_list.add(notes.get(position));
-                    view.setBackgroundColor(Color.parseColor("#8bcfed"));
                 } else {
                     view.setBackgroundColor(Color.parseColor("#F7F3F3"));
                 }
@@ -278,76 +286,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void enableSwipe() {
-        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            public static final float ALPHA_FULL = 1.0f;
-
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-            @Override
-            public void onSwiped (@NonNull RecyclerView.ViewHolder viewHolder,int direction){
-
-                final int position = viewHolder.getAdapterPosition();
-                if (direction == ItemTouchHelper.LEFT || direction == ItemTouchHelper.RIGHT) {
-                    final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
-                    final Notes temp = notes.get(position);
-                    final Notes recover = notes.get(position);
-                    long a = db.deleteNote(temp.get_id());
-                    notes.remove(position);
-                    Log.d("snackbar", "addition" + a);
-                    adapter.notifyItemRemoved(position);
-
-                    Snackbar snackbar = Snackbar.make(layout, "Removed from list", Snackbar.LENGTH_LONG);
-                    snackbar.setAction("UNDO", new View.OnClickListener() {
-                        public void onClick(View view) {
-                            db.addNoteInDatabase(recover);
-                            adapter.notifyItemInserted(position);
-
-
-                        }
-                    });
-                    snackbar.setActionTextColor(Color.YELLOW);
-                    snackbar.show();
-
-
-                }
-            }
-
-
-            @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-
-                Bitmap icon;
-                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-
-                    View itemView = viewHolder.itemView;
-                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
-                    float width = height / 3;
-
-                    if (dX < 0) {
-                        p.setColor(Color.parseColor("#D32F2F"));
-                        RectF background = new RectF((float) itemView.getRight() + dX/4, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
-                        c.drawRect(background, p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_black_24dp);
-                        RectF icon_dest = new RectF((float) itemView.getRight() - 2 * width, (float) itemView.getTop() + width, (float) itemView.getRight() - width, (float) itemView.getBottom() - width);
-                      //  c.drawBitmap(icon, null, icon_dest, p);
-
-                    }
-                }
-                super.onChildDraw(c, recyclerView, viewHolder, dX/4, dY, actionState, isCurrentlyActive);
-            }
-        };
-
-
-
-
-
-    ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-
-}
 
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -365,18 +303,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+            multiselect_list.clear();
+            mactionMode = null;
+            adapter.notifyDataSetChanged();
+            recyclerView.setBackgroundColor(Color.parseColor("#F7F3F3"));
 
-        is_in_action_mode = false;
-        multiselect_list.clear();
-        mactionMode = null;
-        adapter.notifyDataSetChanged();
-        recyclerView.setBackgroundColor(Color.parseColor("#F7F3F3"));
+
 
     }
 
     private void gotomain() {
-        super.onBackPressed();
 
+        super.onBackPressed();
     }
 }
 
