@@ -51,7 +51,7 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
     }
 
 
-    public Notes addNoteInDatabase(Notes notes) {
+    public long addNoteInDatabase(Notes notes) {
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLOUM_TITLE, notes.get_title());
@@ -63,22 +63,23 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
         long ID = db.insert(DATABASE_TABLE, null, contentValues);
         Log.d("inserted", " ID " + ID);
         db.close();
-        return notes;
 
+return ID;
     }
 
     public Notes getOneNote(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(DATABASE_TABLE, new String[]{COLOUM_ID, COLOUM_TITLE, COLOUM_CONTENT, COLOUM_DATE_OF_CREATION, COLOUM_TIME}, COLOUM_ID + "=?",
-                new String[]{String.valueOf(id)}, null, null, null);
+                new String[]{String.valueOf(id)}, null, null, null, null);
 
-        if (cursor != null)
+        if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
 
-        return new Notes(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+            return new Notes(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+        }
 
+    return  null;
     }
-
 
 
 
@@ -100,6 +101,8 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
                 allnotes.add(notes);
             } while (cursor.moveToNext());
         }
+        cursor.close();
+        db.close();
         return allnotes;
     }
 

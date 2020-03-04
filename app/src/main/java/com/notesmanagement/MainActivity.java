@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -40,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
     Button addition;
     RelativeLayout layout;
     int selectedPos;
+    long i;
+
+    Notes recover;
+    HashSet<Notes> hashSet=new HashSet<>();
 
     long idToHighlight;
     private Paint p = new Paint();
@@ -70,14 +75,16 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("delete", "pressed");
                     if (multiselect_list.size() > 0) {
                         final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
-
                         for (int i = 0; i < multiselect_list.size(); i++) {
                             Long idToDelete = multiselect_list.get(i).get_id();
                             notes.remove(multiselect_list.get(i));
                             Long a = db.deleteNote(idToDelete);
                             Log.d("delete", "  " + a);
-                            adapter.notifyDataSetChanged();
-                            
+                            adapter.notifyItemRemoved(i);
+                            adapter = new Adapter(getApplicationContext(), notes, multiselect_list);
+                            recyclerView.setAdapter(adapter);
+
+
                         }
 
                         mode.finish();
@@ -92,11 +99,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+
             multiselect_list.clear();
             isMultiSelect = false;
             adapter.notifyDataSetChanged();
             addition.setVisibility(View.VISIBLE);
-            layout.setBackgroundColor(Color.parseColor("#F7F3F3"));
+
             mactionMode = null;
             onBackPressed();
         }
@@ -149,6 +157,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 
+
         MySwipeHelper swipeHelper=new MySwipeHelper(this, recyclerView,200) {
             @Override
             public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<MySwipeHelper.MyButton> buffer) {
@@ -161,9 +170,10 @@ public class MainActivity extends AppCompatActivity {
                         new  MyButtonClickListner(){
                             @Override
                             public void onClick(final int pos) {
-                               final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
-                               long idToDelete = notes.get(pos).get_id();
-                               final Notes recover = db.getOneNote(idToDelete);
+                                final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
+                                 final long idToDelete = notes.get(pos).get_id();
+                                Log.d("id to delete", "id "+idToDelete);
+                                recover = db.getOneNote(idToDelete);
                                 db.deleteNote(idToDelete);
                                 notes.remove(pos);
                                 adapter.notifyItemRemoved(pos);
@@ -171,9 +181,14 @@ public class MainActivity extends AppCompatActivity {
                                 Snackbar snackbar = Snackbar.make(layout, "Removed from list", Snackbar.LENGTH_LONG);
                                 snackbar.setAction("UNDO", new View.OnClickListener() {
                                     public void onClick(View view) {
-                                        db.addNoteInDatabase(recover);
-                                         notes.add(pos,recover);
-                                         adapter.notifyItemInserted(pos);
+                                        if (recover!=null) {
+                                            i = db.addNoteInDatabase(new Notes(recover.get_title(), recover.get_content(), recover.get_dateOfCreation(), recover.get_time()));
+                                            Log.d("id to delete", "data " + recover.get_id() + " " + recover.get_title() + " " + recover.get_content() + " " + recover.get_dateOfCreation() + " " + recover.get_time());
+                                            recover = db.getOneNote(i);
+                                            notes.add(pos, recover);
+
+                                        }
+                                        adapter.notifyItemInserted(pos);
 
                                     }
                                 });
@@ -266,9 +281,8 @@ public class MainActivity extends AppCompatActivity {
                 view.setBackgroundColor(Color.parseColor("#F7F3F3"));
             } else {
                 if (idToHighlight == notes.get(position).get_id()) {
-
-                   view.setBackgroundColor(Color.parseColor("#8bcfed"));
                     multiselect_list.add(notes.get(position));
+                    view.setBackgroundColor(Color.parseColor("#8bcfed"));
                 } else {
                     view.setBackgroundColor(Color.parseColor("#F7F3F3"));
                 }
@@ -276,17 +290,14 @@ public class MainActivity extends AppCompatActivity {
             if (multiselect_list.size() > 0) {
                 mactionMode.setTitle(multiselect_list.size() + " Notes Selected");
 
+
             } else {
                 mactionMode.setTitle("Select Notes");
+                view.setBackgroundColor(Color.parseColor("#F7F3F3"));
 
             }
-
         }
-
-
     }
-
-
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.folder) {
@@ -302,20 +313,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-
+            recyclerView.setBackgroundColor(Color.parseColor("#F7F3F3"));
             multiselect_list.clear();
             mactionMode = null;
             adapter.notifyDataSetChanged();
-            recyclerView.setBackgroundColor(Color.parseColor("#F7F3F3"));
 
 
 
     }
 
     private void gotomain() {
-
         super.onBackPressed();
     }
+
+
 }
 
 

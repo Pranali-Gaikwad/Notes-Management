@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements Filterable {
@@ -25,41 +26,43 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
     private List<Notes> notelistAll;
     private List<Notes> selectedItems = new ArrayList<>();
     Context context;
+    private List<Notes> notelistAllData;
     private List<Notes> notes = new ArrayList<>();
+
+
     Filter filter = new Filter() {
+
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-
             List<Notes> filteredlist = new ArrayList<>();
+            if (constraint ==null || constraint.length()==0){
 
-
-            if ((constraint.toString().isEmpty())) {
                 filteredlist.addAll(notelistAll);
                 Log.d("list", "all list " +notelistAll);
                 Collections.reverse(notes);
-
             } else {
+
                 for (Notes n1 : notelistAll) {
                     if (n1.get_title().toLowerCase().contains(constraint.toString().toLowerCase())
-                            || n1.get_content().toLowerCase().contains(constraint.toString().toLowerCase())) {
+                            || n1.get_content().toLowerCase().contains(constraint.toString().toLowerCase())){
                              filteredlist.add(n1);
                     }
-
                 }
             }
-
-            FilterResults filterResults = new FilterResults();
-            filterResults.values = filteredlist;
-            return filterResults;
+            FilterResults results = new FilterResults();
+            results.values = filteredlist;
+            return results;
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
 
-           notes.clear();
-            notes.addAll((Collection<? extends Notes>) results.values);
+            Collections.reverse(notelistAll);
+            notes.clear();
+            notes.addAll((List) results.values);
             notifyDataSetChanged();
             Collections.reverse(notes);
+
 
         }
     };
@@ -70,6 +73,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         this.notes = notes;
         this.selectedItems = selectedItems;
         this.notelistAll = new ArrayList<>(notes);
+
     }
 
     @NonNull
@@ -85,8 +89,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         holder.nTitle1.setText(notes.get(position).get_title());
         holder.nDate1.setText(notes.get(position).get_dateOfCreation());
         holder.nTime1.setText(notes.get(position).get_time());
-
-
     }
 
 
@@ -112,6 +114,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
             nTime1 = itemView.findViewById(R.id.nTime);
             layout = itemView.findViewById(R.id.linearLayout);
             cardView= itemView.findViewById(R.id.cardView);
+
 
         }
     }

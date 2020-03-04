@@ -67,8 +67,8 @@ public class AddActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if ((!isEmpty(noteTitle)) || (!isEmpty(noteDetails))) {
                     NotesManagementDatabase db = new NotesManagementDatabase(v.getContext());
-                    db.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate, currentTime));
-                    Toast.makeText(v.getContext(), "Note Successfully Saved", Toast.LENGTH_SHORT).show();
+                     db.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate, currentTime));
+                    Toast.makeText(v.getContext(), "Note Successfully Saved " , Toast.LENGTH_SHORT).show();
                     gotoMain();
                 } else {
                     Toast.makeText(v.getContext(), " Empty Note can not be Saved", Toast.LENGTH_SHORT).show();
