@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -19,7 +21,7 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
     private static final String COLOUM_TITLE = "_title";
     private static final String COLOUM_CONTENT = "_content";
     private static final String COLOUM_DATE_OF_CREATION = "_dateOfCreation";
-    private static final String COLOUM_TIME = "_time";
+
 
 
     public NotesManagementDatabase(Context context) {
@@ -32,8 +34,8 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
 
         String query = "CREATE TABLE " + DATABASE_TABLE + "("
                 + COLOUM_ID + " INTEGER PRIMARY KEY, " + COLOUM_TITLE + " TEXT, "
-                + COLOUM_CONTENT + " TEXT, " + COLOUM_DATE_OF_CREATION + " TEXT, "
-                + COLOUM_TIME + " TEXT" + ")";
+                + COLOUM_CONTENT + " TEXT, " + COLOUM_DATE_OF_CREATION + " TIMESTAMP NOT NULL" + ")";
+
         db.execSQL(query);
 
 
@@ -53,29 +55,32 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
 
     public long addNoteInDatabase(Notes notes) {
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String strDate = sdf.format(new Date());
+
+
+
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLOUM_TITLE, notes.get_title());
         contentValues.put(COLOUM_CONTENT, notes.get_content());
-        contentValues.put(COLOUM_DATE_OF_CREATION, notes.get_dateOfCreation());
-        contentValues.put(COLOUM_TIME, notes.get_time());
+        contentValues.put(COLOUM_DATE_OF_CREATION, strDate );
         SQLiteDatabase db = this.getWritableDatabase();
 
         long ID = db.insert(DATABASE_TABLE, null, contentValues);
         Log.d("inserted", " ID " + ID);
         db.close();
-
-return ID;
+        return ID;
     }
 
     public Notes getOneNote(long id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(DATABASE_TABLE, new String[]{COLOUM_ID, COLOUM_TITLE, COLOUM_CONTENT, COLOUM_DATE_OF_CREATION, COLOUM_TIME}, COLOUM_ID + "=?",
+        Cursor cursor = db.query(DATABASE_TABLE, new String[]{COLOUM_ID, COLOUM_TITLE, COLOUM_CONTENT, COLOUM_DATE_OF_CREATION}, COLOUM_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
 
-            return new Notes(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+            return new Notes(cursor.getLong(0), cursor.getString(1), cursor.getString(2), cursor.getString(3));
         }
 
     return  null;
@@ -87,7 +92,7 @@ return ID;
         SQLiteDatabase db = this.getReadableDatabase();
         List<Notes> allnotes = new ArrayList<>();
 
-        String query = "SELECT * FROM " + DATABASE_TABLE;
+        String query = "SELECT * FROM " + DATABASE_TABLE+ " ORDER BY "+COLOUM_DATE_OF_CREATION +" DESC";
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
@@ -96,7 +101,7 @@ return ID;
                 notes.set_title(cursor.getString(1));
                 notes.set_content(cursor.getString(2));
                 notes.set_dateOfCreation(cursor.getString(3));
-                notes.set_time(cursor.getString(4));
+
 
                 allnotes.add(notes);
             } while (cursor.moveToNext());
@@ -113,16 +118,30 @@ return ID;
         db.close();
         return id;
     }
-
+   
     public int editNote(Notes n) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String strDate = sdf.format(new Date());
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLOUM_TITLE, n.get_title());
         contentValues.put(COLOUM_CONTENT, n.get_content());
-        contentValues.put(COLOUM_DATE_OF_CREATION, n.get_dateOfCreation());
-        contentValues.put(COLOUM_TIME, n.get_time());
-
+        contentValues.put(COLOUM_DATE_OF_CREATION, strDate);
         return db.update(DATABASE_TABLE, contentValues, COLOUM_ID + "=?", new String[]{String.valueOf(n.get_id())});
+    }
+
+
+    public long addNoteInDatabaseWhenSwiped(Notes notes) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLOUM_TITLE, notes.get_title());
+        contentValues.put(COLOUM_CONTENT, notes.get_content());
+        contentValues.put(COLOUM_DATE_OF_CREATION, notes.get_dateOfCreation() );
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        long ID = db.insert(DATABASE_TABLE, null, contentValues);
+        Log.d("inserted", " ID " + ID);
+        db.close();
+        return ID;
     }
 
 }

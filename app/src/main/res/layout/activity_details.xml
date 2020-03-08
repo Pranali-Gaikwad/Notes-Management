@@ -29,22 +29,13 @@
         <TextView
             android:id="@+id/dDate"
             android:layout_marginTop="10dp"
-            android:layout_width="100dp"
+            android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:textSize="20sp"
             android:text="TextView"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/dTime"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="10dp"
-            android:text="TextView"
-            android:textSize="15sp"
-         />
 
     </LinearLayout>
     <LinearLayout

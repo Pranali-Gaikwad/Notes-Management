@@ -1,17 +1,9 @@
 package com.notesmanagement;
-
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
+import android.os.Handler;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -23,12 +15,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -146,17 +136,10 @@ public class MainActivity extends AppCompatActivity {
         layout = findViewById(R.id.main);
         recyclerView = findViewById(R.id.review);
         NotesManagementDatabase db1 = new NotesManagementDatabase(this);
-
         notes = db1.getListOfNotes();
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         adapter = new Adapter(this, notes, multiselect_list);
-
-
         recyclerView.setAdapter(adapter);
-
-
 
         MySwipeHelper swipeHelper=new MySwipeHelper(this, recyclerView,200) {
             @Override
@@ -170,6 +153,7 @@ public class MainActivity extends AppCompatActivity {
                         new  MyButtonClickListner(){
                             @Override
                             public void onClick(final int pos) {
+
                                 final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
                                  final long idToDelete = notes.get(pos).get_id();
                                 Log.d("id to delete", "id "+idToDelete);
@@ -178,19 +162,21 @@ public class MainActivity extends AppCompatActivity {
                                 notes.remove(pos);
                                 adapter.notifyItemRemoved(pos);
 
-                                Snackbar snackbar = Snackbar.make(layout, "Removed from list", Snackbar.LENGTH_LONG);
-                                snackbar.setAction("UNDO", new View.OnClickListener() {
+                              final   Snackbar snackbar = Snackbar.make(layout, "Removed from list", Snackbar.LENGTH_LONG);
+
+                              snackbar.setAction("UNDO", new View.OnClickListener() {
                                     public void onClick(View view) {
+                                        disable(view);
                                         if (recover!=null) {
-                                            i = db.addNoteInDatabase(new Notes(recover.get_title(), recover.get_content(), recover.get_dateOfCreation(), recover.get_time()));
-                                            Log.d("id to delete", "data " + recover.get_id() + " " + recover.get_title() + " " + recover.get_content() + " " + recover.get_dateOfCreation() + " " + recover.get_time());
+                                            i = db.addNoteInDatabaseWhenSwiped(new Notes(recover.get_title(), recover.get_content(), recover.get_dateOfCreation()));
+                                            Log.d("id to delete", "data " + recover.get_id() + " " + recover.get_title() + " " + recover.get_content() + " " + recover.get_dateOfCreation() );
                                             recover = db.getOneNote(i);
                                             notes.add(pos, recover);
-
                                         }
                                         adapter.notifyItemInserted(pos);
 
                                     }
+
                                 });
                                 snackbar.setActionTextColor(Color.YELLOW);
                                 snackbar.show();
@@ -259,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
 
         }));
 
-        Collections.reverse(notes);
+
         addition = findViewById(R.id.additionButton);
 
         addition.setOnClickListener(new View.OnClickListener() {
@@ -294,7 +280,6 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 mactionMode.setTitle("Select Notes");
                 view.setBackgroundColor(Color.parseColor("#F7F3F3"));
-
             }
         }
     }
@@ -309,25 +294,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     @Override
     public void onBackPressed() {
             recyclerView.setBackgroundColor(Color.parseColor("#F7F3F3"));
             multiselect_list.clear();
             mactionMode = null;
             adapter.notifyDataSetChanged();
-
-
-
     }
 
     private void gotomain() {
         super.onBackPressed();
     }
-
+    private void disable(View v){
+        Log.d("TAG", "TAG" + v.getId());
+        v.setEnabled(false);
+        v.setClickable(false);
+        v.setFocusable(false);
+    }
 
 }
-
-
-

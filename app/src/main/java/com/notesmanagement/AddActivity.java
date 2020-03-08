@@ -18,18 +18,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class AddActivity extends AppCompatActivity {
 
     TextView dateshow;
-    TextView timeshow;
     EditText noteTitle;
     EditText noteDetails;
-    Calendar calendar;
     String todaysDate;
-    String currentTime;
     Button saved;
 
     @Override
@@ -43,23 +41,16 @@ public class AddActivity extends AppCompatActivity {
             actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient));
         }
 
-
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        todaysDate = sdf.format(new Date());
         noteTitle = findViewById(R.id.note_title);
         noteDetails = findViewById(R.id.note_details);
         dateshow = findViewById(R.id.dateadd);
-        timeshow = findViewById(R.id.timeadd);
-
         saved = findViewById(R.id.saveDataButton);
-        calendar = Calendar.getInstance();
-        todaysDate = calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
-      currentTime = pad(calendar.get(Calendar.HOUR)) + ":" + pad(calendar.get(Calendar.MINUTE))+ " "+ amAndPm();
 
 
-        Log.d("calender", " Date and Time " + todaysDate + " and " + currentTime);
-        Log.d("to", "date" + todaysDate);
 
         dateshow.setText(String.valueOf(todaysDate));
-        timeshow.setText(String.valueOf(currentTime));
 
 
         saved.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +58,7 @@ public class AddActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if ((!isEmpty(noteTitle)) || (!isEmpty(noteDetails))) {
                     NotesManagementDatabase db = new NotesManagementDatabase(v.getContext());
-                     db.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate, currentTime));
+                     db.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate));
                     Toast.makeText(v.getContext(), "Note Successfully Saved " , Toast.LENGTH_SHORT).show();
                     gotoMain();
                 } else {
@@ -100,14 +91,7 @@ public class AddActivity extends AppCompatActivity {
 
     }
 
-    private String amAndPm() {
-        if(calendar.get(Calendar.AM_PM) == Calendar.AM){
-            return "AM";
 
-        }else{
-            return "PM";
-        }
-    }
 
     private String pad(int i) {
         if (i < 10) {
@@ -139,7 +123,7 @@ public class AddActivity extends AppCompatActivity {
     public void onBackPressed() {
         if ((!isEmpty(noteTitle)) || (!isEmpty(noteDetails))) {
             NotesManagementDatabase db = new NotesManagementDatabase(this);
-            db.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate, currentTime));
+            db.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate));
             Toast.makeText(getApplicationContext(), "Note Successfully Saved", Toast.LENGTH_SHORT).show();
         }
 
@@ -147,7 +131,6 @@ public class AddActivity extends AppCompatActivity {
         super.onBackPressed();
 
     }
-
     boolean isEmpty(EditText text) {
         CharSequence str = text.getText().toString();
         return TextUtils.isEmpty(str);

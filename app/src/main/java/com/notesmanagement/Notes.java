@@ -5,24 +5,23 @@ public class Notes {
     private String _title;
     private String _content;
     private String _dateOfCreation;
-    private String _time;
 
-    Notes() {
+
+    public Notes() {
     }
 
-    public Notes(String title, String content, String dateOfCreation, String time) {
-        this._title = title;
-        this._content = content;
-        this._dateOfCreation = dateOfCreation;
-        this._time = time;
+    public Notes(String _title, String _content, String _dateOfCreation) {
+        this._title = _title;
+        this._content = _content;
+        this._dateOfCreation = _dateOfCreation;
     }
 
-    public Notes(long id, String title, String content, String dateOfCreation, String time) {
+    public Notes(long id, String title, String content, String dateOfCreation) {
         this._id = id;
         this._title = title;
         this._content = content;
         this._dateOfCreation = dateOfCreation;
-        this._time = time;
+
     }
 
     public long get_id() {
@@ -57,13 +56,6 @@ public class Notes {
         this._dateOfCreation = _dateOfCreation;
     }
 
-    public String get_time() {
-        return _time;
-    }
-
-    public void set_time(String _time) {
-        this._time = _time;
-    }
 
     @Override
     public String toString() {
@@ -72,7 +64,6 @@ public class Notes {
                 ", _title='" + _title + '\'' +
                 ", _content='" + _content + '\'' +
                 ", _dateOfCreation='" + _dateOfCreation + '\'' +
-                ", _time='" + _time + '\'' +
                 '}';
     }
 }

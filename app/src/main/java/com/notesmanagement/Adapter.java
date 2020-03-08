@@ -1,7 +1,6 @@
 package com.notesmanagement;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +14,9 @@ import androidx.cardview.widget.CardView;
 
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
-import java.util.Collection;
+
 import java.util.Collections;
-import java.util.HashSet;
+
 import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements Filterable {
@@ -25,8 +24,6 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
     private LayoutInflater inflater;
     private List<Notes> notelistAll;
     private List<Notes> selectedItems = new ArrayList<>();
-    Context context;
-    private List<Notes> notelistAllData;
     private List<Notes> notes = new ArrayList<>();
 
 
@@ -39,7 +36,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
 
                 filteredlist.addAll(notelistAll);
                 Log.d("list", "all list " +notelistAll);
-                Collections.reverse(notes);
+
             } else {
 
                 for (Notes n1 : notelistAll) {
@@ -61,7 +58,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
             notes.clear();
             notes.addAll((List) results.values);
             notifyDataSetChanged();
-            Collections.reverse(notes);
+
 
 
         }
@@ -88,7 +85,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
 
         holder.nTitle1.setText(notes.get(position).get_title());
         holder.nDate1.setText(notes.get(position).get_dateOfCreation());
-        holder.nTime1.setText(notes.get(position).get_time());
+
     }
 
 
@@ -102,7 +99,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView nTitle1, nDate1, nTime1;
+        TextView nTitle1, nDate1;
         LinearLayout layout;
         CardView cardView;
 
@@ -111,11 +108,8 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
             super(itemView);
             nTitle1 = itemView.findViewById(R.id.nTitle);
             nDate1 = itemView.findViewById(R.id.nDate);
-            nTime1 = itemView.findViewById(R.id.nTime);
             layout = itemView.findViewById(R.id.linearLayout);
             cardView= itemView.findViewById(R.id.cardView);
-
-
         }
     }
 

@@ -22,9 +22,9 @@ import java.util.Calendar;
 public class Edit extends AppCompatActivity {
     EditText noteTitle;
     EditText noteDetails;
-    Calendar calendar;
+
     String todaysDate;
-    String currentTime;
+
     NotesManagementDatabase db;
     Button edit;
     Notes n;
@@ -60,7 +60,7 @@ public class Edit extends AppCompatActivity {
                     n.set_title(noteTitle.getText().toString());
                     n.set_content(noteDetails.getText().toString());
                     n.set_dateOfCreation(todaysDate);
-                    n.set_time(currentTime);
+
                     int i = db.editNote(n);
                     if (i == n.get_id()) {
                     } else {
@@ -102,27 +102,12 @@ public class Edit extends AppCompatActivity {
         });
 
 
-        calendar = Calendar.getInstance();
-        todaysDate = calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH) + 1) + "/" + calendar.get(Calendar.YEAR);
-        currentTime = pad(calendar.get(Calendar.HOUR)) + ":" + pad(calendar.get(Calendar.MINUTE)) +" "+ amAndPm();
-        Log.d("calender", " Date and Time " + todaysDate + " and " + currentTime);
+
+
 
     }
-    private String amAndPm() {
-        if(calendar.get(Calendar.AM_PM) == Calendar.AM){
-            return "AM";
 
-        }else{
-            return "PM";
-        }
-    }
 
-    private String pad(int i) {
-        if (i < 10) {
-            return "0" + i;
-        }
-        return String.valueOf(i);
-    }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.save_menu, menu);

@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class Details extends AppCompatActivity {
-    TextView details, date1, time;
+    TextView details, date1;
     Button deleteButton;
     NotesManagementDatabase database;
     Notes notes;
@@ -35,7 +35,7 @@ public class Details extends AppCompatActivity {
         deleteButton = findViewById(R.id.delete);
         details = findViewById(R.id.dContent);
         date1 = findViewById(R.id.dDate);
-        time = findViewById(R.id.dTime);
+
 
 
         Intent intent = getIntent();
@@ -45,7 +45,7 @@ public class Details extends AppCompatActivity {
 
         details.setText(notes.get_content());
         date1.setText(notes.get_dateOfCreation());
-        time.setText(notes.get_time());
+
         getSupportActionBar().setTitle(notes.get_title());
 
 
