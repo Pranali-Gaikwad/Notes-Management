@@ -2,11 +2,9 @@ package com.notesmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.renderscript.Sampler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +26,7 @@ public class AddActivity extends AppCompatActivity {
     EditText noteDetails;
     String todaysDate;
     Button saved;
+    NotesManagementDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,24 +39,21 @@ public class AddActivity extends AppCompatActivity {
             actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient));
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
         todaysDate = sdf.format(new Date());
         noteTitle = findViewById(R.id.note_title);
         noteDetails = findViewById(R.id.note_details);
         dateshow = findViewById(R.id.dateadd);
         saved = findViewById(R.id.saveDataButton);
-
-
-
         dateshow.setText(String.valueOf(todaysDate));
 
-
+        database = new NotesManagementDatabase(this);
         saved.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if ((!isEmpty(noteTitle)) || (!isEmpty(noteDetails))) {
-                    NotesManagementDatabase db = new NotesManagementDatabase(v.getContext());
-                     db.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate));
+
+                    database.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate));
                     Toast.makeText(v.getContext(), "Note Successfully Saved " , Toast.LENGTH_SHORT).show();
                     gotoMain();
                 } else {
@@ -81,7 +76,6 @@ public class AddActivity extends AppCompatActivity {
                 }
 
             }
-
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -90,16 +84,6 @@ public class AddActivity extends AppCompatActivity {
 
 
     }
-
-
-
-    private String pad(int i) {
-        if (i < 10) {
-            return "0" + i;
-        }
-        return String.valueOf(i);
-    }
-
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.save_menu, menu);
         return true;
@@ -122,17 +106,18 @@ public class AddActivity extends AppCompatActivity {
 
     public void onBackPressed() {
         if ((!isEmpty(noteTitle)) || (!isEmpty(noteDetails))) {
-            NotesManagementDatabase db = new NotesManagementDatabase(this);
-            db.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate));
+
+            database.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate));
             Toast.makeText(getApplicationContext(), "Note Successfully Saved", Toast.LENGTH_SHORT).show();
         }
 
-        gotoMain();
-        super.onBackPressed();
+      gotoMain();
+
 
     }
     boolean isEmpty(EditText text) {
         CharSequence str = text.getText().toString();
         return TextUtils.isEmpty(str);
     }
+
 }

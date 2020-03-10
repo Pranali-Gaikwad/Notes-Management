@@ -132,7 +132,6 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
             this.imageResId = imageResId;
             this.textsize = textsize;
             this.color = color;
-
             this.listner = listner;
             this.context = context;
             resources = context.getResources();

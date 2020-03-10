@@ -5,29 +5,23 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.Calendar;
-
 public class Edit extends AppCompatActivity {
     EditText noteTitle;
     EditText noteDetails;
-
     String todaysDate;
-
-    NotesManagementDatabase db;
+    NotesManagementDatabase database;
     Button edit;
-    Notes n;
+    Notes note;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,27 +36,27 @@ public class Edit extends AppCompatActivity {
 
         Intent intent = getIntent();
         Long id1 = intent.getLongExtra("ID", 0);
-        db = new NotesManagementDatabase(this);
-        n = db.getOneNote(id1);
+
+        database = new NotesManagementDatabase(this);
+        note = database.getOneNote(id1);
 
         noteTitle = findViewById(R.id.note_title);
         noteDetails = findViewById(R.id.note_details);
 
         edit = findViewById(R.id.saveEditButton);
-        getSupportActionBar().setTitle(n.get_title());
-        noteTitle.setText(n.get_title());
-        noteDetails.setText(n.get_content());
+        getSupportActionBar().setTitle(note.get_title());
+        noteTitle.setText(note.get_title());
+        noteDetails.setText(note.get_content());
 
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if ((!isEmpty(noteTitle)) || (!isEmpty(noteDetails))) {
-                    n.set_title(noteTitle.getText().toString());
-                    n.set_content(noteDetails.getText().toString());
-                    n.set_dateOfCreation(todaysDate);
-
-                    int i = db.editNote(n);
-                    if (i == n.get_id()) {
+                    note.set_title(noteTitle.getText().toString());
+                    note.set_content(noteDetails.getText().toString());
+                    note.set_dateOfCreation(todaysDate);
+                    long i = database.editNote(note);
+                    if (i == note.get_id()) {
                     } else {
                         Toast.makeText(v.getContext(), "Note Update Successfully", Toast.LENGTH_SHORT).show();
                     }
@@ -71,15 +65,10 @@ public class Edit extends AppCompatActivity {
                 }
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("ID", n.get_id());
+                intent.putExtra("ID", note.get_id());
                 startActivity(intent);
-
-
             }
-
-
         });
-
 
         noteTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -101,13 +90,7 @@ public class Edit extends AppCompatActivity {
             }
         });
 
-
-
-
-
     }
-
-
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.save_menu, menu);

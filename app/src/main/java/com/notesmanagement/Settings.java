@@ -15,6 +15,5 @@ public class Settings extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient));
         }
-
     }
 }

@@ -55,7 +55,7 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
 
     public long addNoteInDatabase(Notes notes) {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
         String strDate = sdf.format(new Date());
 
 
@@ -119,8 +119,8 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
         return id;
     }
    
-    public int editNote(Notes n) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public long editNote(Notes n) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
         String strDate = sdf.format(new Date());
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();

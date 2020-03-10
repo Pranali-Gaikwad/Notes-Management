@@ -1,9 +1,7 @@
 package com.notesmanagement;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
@@ -19,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 
@@ -30,21 +27,14 @@ public class MainActivity extends AppCompatActivity {
     List<Notes> multiselect_list = new ArrayList<>();
     Button addition;
     RelativeLayout layout;
-    int selectedPos;
-    long i;
-
+    long id;
     Notes recover;
-    HashSet<Notes> hashSet=new HashSet<>();
-
-    long idToHighlight;
-    private Paint p = new Paint();
-    private List<Long> selectedIds = new ArrayList<>();
+    private List<Notes> notelistAll=notes;
     boolean isMultiSelect = false;
     private ActionMode mactionMode;
     private ActionMode.Callback actionModeCallbacks = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-
 
             mode.getMenuInflater().inflate(R.menu.delete_hidden, menu);
             mode.setTitle("0 Notes Selected");
@@ -71,14 +61,10 @@ public class MainActivity extends AppCompatActivity {
                             Long a = db.deleteNote(idToDelete);
                             Log.d("delete", "  " + a);
                             adapter.notifyItemRemoved(i);
-                            adapter = new Adapter(getApplicationContext(), notes, multiselect_list);
-                            recyclerView.setAdapter(adapter);
-
+                            refreshList();
 
                         }
-
                         mode.finish();
-
                     }
                     return true;
                 default:
@@ -89,21 +75,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-
             multiselect_list.clear();
             isMultiSelect = false;
             adapter.notifyDataSetChanged();
             addition.setVisibility(View.VISIBLE);
-
             mactionMode = null;
-            onBackPressed();
+
         }
     };
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_resource, menu);
         MenuItem menuItem = menu.findItem(R.id.search);
-
         SearchView searchView = (SearchView) menuItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -135,10 +118,10 @@ public class MainActivity extends AppCompatActivity {
 
         layout = findViewById(R.id.main);
         recyclerView = findViewById(R.id.review);
-        NotesManagementDatabase db1 = new NotesManagementDatabase(this);
-        notes = db1.getListOfNotes();
+        NotesManagementDatabase database = new NotesManagementDatabase(this);
+        notes = database.getListOfNotes();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new Adapter(this, notes, multiselect_list);
+        adapter = new Adapter(this, notes);
         recyclerView.setAdapter(adapter);
 
         MySwipeHelper swipeHelper=new MySwipeHelper(this, recyclerView,200) {
@@ -155,31 +138,42 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(final int pos) {
 
                                 final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
-                                 final long idToDelete = notes.get(pos).get_id();
+                                final long idToDelete = notes.get(pos).get_id();
                                 Log.d("id to delete", "id "+idToDelete);
                                 recover = db.getOneNote(idToDelete);
                                 db.deleteNote(idToDelete);
                                 notes.remove(pos);
                                 adapter.notifyItemRemoved(pos);
+                                List<Notes>  notelist=db.getListOfNotes();
+                                adapter.setListOfAllNotes(notelist);
+
+
+                               // refreshList();
 
                               final   Snackbar snackbar = Snackbar.make(layout, "Removed from list", Snackbar.LENGTH_LONG);
 
                               snackbar.setAction("UNDO", new View.OnClickListener() {
                                     public void onClick(View view) {
-                                        disable(view);
+                                    view.setEnabled(false);
+                                       view.setClickable(false);
                                         if (recover!=null) {
-                                            i = db.addNoteInDatabaseWhenSwiped(new Notes(recover.get_title(), recover.get_content(), recover.get_dateOfCreation()));
+                                            id = db.addNoteInDatabaseWhenSwiped(new Notes(recover.get_title(), recover.get_content(), recover.get_dateOfCreation()));
                                             Log.d("id to delete", "data " + recover.get_id() + " " + recover.get_title() + " " + recover.get_content() + " " + recover.get_dateOfCreation() );
-                                            recover = db.getOneNote(i);
+                                            recover = db.getOneNote(id);
                                             notes.add(pos, recover);
-                                        }
-                                        adapter.notifyItemInserted(pos);
+                                            adapter.notifyItemInserted(pos);
+                                            List<Notes>  notelist=db.getListOfNotes();
+                                            adapter.setListOfAllNotes(notelist);
 
+
+                                        }
+                                       // refreshList();
                                     }
 
                                 });
                                 snackbar.setActionTextColor(Color.YELLOW);
                                 snackbar.show();
+
 
 
                             }
@@ -211,12 +205,10 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(View view, int position) {
                 if (isMultiSelect) {
                     addition.setVisibility(View.GONE);
-                    idToHighlight=notes.get(position).get_id();
-                    selectedPos = position;
-                    multi_select(position, view, idToHighlight);
-
+                    multi_select(position);
                 } else {
                     Intent intent = new Intent(view.getContext(), Details.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("ID", notes.get(position).get_id());
                     view.getContext().startActivity(intent);
 
@@ -227,19 +219,15 @@ public class MainActivity extends AppCompatActivity {
             public void onItemLongClick(View view, int position) {
 
                 if (!isMultiSelect) {
-                    selectedIds = new ArrayList<Long>();
                     multiselect_list = new ArrayList<Notes>();
-                    idToHighlight=notes.get(position).get_id();
                     isMultiSelect = true;
                     addition.setVisibility(View.GONE);
-                    selectedPos = position;
-
                     if (mactionMode == null) {
                         mactionMode = startActionMode(actionModeCallbacks);
                     }
 
                 }
-                multi_select(position, view, idToHighlight);
+                multi_select(position);
 
             }
 
@@ -258,19 +246,17 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void multi_select(int position, View view, long idToHighlight) {
+    public void multi_select(int position) {
 
 
         if (mactionMode != null) {
             if (multiselect_list.contains(notes.get(position))) {
                 multiselect_list.remove((notes.get(position)));
-                view.setBackgroundColor(Color.parseColor("#F7F3F3"));
+
             } else {
-                if (idToHighlight == notes.get(position).get_id()) {
+                {
                     multiselect_list.add(notes.get(position));
-                    view.setBackgroundColor(Color.parseColor("#8bcfed"));
-                } else {
-                    view.setBackgroundColor(Color.parseColor("#F7F3F3"));
+
                 }
             }
             if (multiselect_list.size() > 0) {
@@ -279,8 +265,9 @@ public class MainActivity extends AppCompatActivity {
 
             } else {
                 mactionMode.setTitle("Select Notes");
-                view.setBackgroundColor(Color.parseColor("#F7F3F3"));
+
             }
+            adapter.setSelectedIds(multiselect_list);
         }
     }
 
@@ -294,22 +281,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
+   @Override
     public void onBackPressed() {
-            recyclerView.setBackgroundColor(Color.parseColor("#F7F3F3"));
-            multiselect_list.clear();
-            mactionMode = null;
-            adapter.notifyDataSetChanged();
+        multiselect_list.clear();
+        mactionMode = null;
+        adapter.notifyDataSetChanged();
+        addition.setVisibility(View.VISIBLE);
+
     }
 
-    private void gotomain() {
-        super.onBackPressed();
-    }
-    private void disable(View v){
-        Log.d("TAG", "TAG" + v.getId());
-        v.setEnabled(false);
-        v.setClickable(false);
-        v.setFocusable(false);
+    private void refreshList(){
+        NotesManagementDatabase database = new NotesManagementDatabase(this);
+        notes = database.getListOfNotes();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new Adapter(this, notes);
+        recyclerView.setAdapter(adapter);
+
     }
 
 }

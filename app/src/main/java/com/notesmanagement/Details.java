@@ -36,10 +36,10 @@ public class Details extends AppCompatActivity {
         details = findViewById(R.id.dContent);
         date1 = findViewById(R.id.dDate);
 
-
-
         Intent intent = getIntent();
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Long id1 = intent.getLongExtra("ID", 0);
+
         database = new NotesManagementDatabase(this);
         notes = database.getOneNote(id1);
 
