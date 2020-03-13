@@ -16,7 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class Details extends AppCompatActivity {
-    TextView details, date1;
+    TextView noteDetails, dateToShow;
     Button deleteButton;
     NotesManagementDatabase database;
     Notes notes;
@@ -32,9 +32,10 @@ public class Details extends AppCompatActivity {
             actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient));
         }
 
+
         deleteButton = findViewById(R.id.delete);
-        details = findViewById(R.id.dContent);
-        date1 = findViewById(R.id.dDate);
+        noteDetails = findViewById(R.id.dContent);
+        dateToShow = findViewById(R.id.dDate);
 
         Intent intent = getIntent();
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -43,8 +44,8 @@ public class Details extends AppCompatActivity {
         database = new NotesManagementDatabase(this);
         notes = database.getOneNote(id1);
 
-        details.setText(notes.get_content());
-        date1.setText(notes.get_dateOfCreation());
+        noteDetails.setText(notes.get_content());
+        dateToShow.setText(notes.get_dateOfCreation());
 
         getSupportActionBar().setTitle(notes.get_title());
 
@@ -52,11 +53,10 @@ public class Details extends AppCompatActivity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                AlertDialog diaBox = AskOption();
+                AlertDialog diaBox = AskOptionToDelete();
                 diaBox.show();
             }
         });
-
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -70,34 +70,31 @@ public class Details extends AppCompatActivity {
             Intent intent = new Intent(this, Edit.class);
             intent.putExtra("ID", notes.get_id());
             startActivity(intent);
-
-
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private AlertDialog AskOption() {
+    private AlertDialog AskOptionToDelete() {
         AlertDialog myQuittingDialogBox = new AlertDialog.Builder(this)
                 .setTitle("Delete Note")
                 .setMessage("Delete this note?")
-                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int whichButton){
                         database.deleteNote(notes.get_id());
                         Toast.makeText(getApplicationContext(), "Note Successfully Deleted", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                        Intent intent= new Intent(getApplicationContext(), MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
                         dialog.dismiss();
                     }
 
                 })
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
                         dialog.dismiss();
-
                     }
                 })
                 .create();
-
         return myQuittingDialogBox;
     }
 

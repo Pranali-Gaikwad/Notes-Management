@@ -52,6 +52,7 @@ public class Folders extends AppCompatActivity {
                 String clickedItem = (String) list.getItemAtPosition(position);
                 if (clickedItem.equals("All Notes")) {
                     Intent intent = new Intent(Folders.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }
                 Toast.makeText(Folders.this, clickedItem, Toast.LENGTH_LONG).show();
@@ -59,16 +60,13 @@ public class Folders extends AppCompatActivity {
 
         });
 
-
     }
-
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.setting) {
             Intent intent = new Intent(this, Settings.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-
-
         }
         return super.onOptionsItemSelected(item);
     }

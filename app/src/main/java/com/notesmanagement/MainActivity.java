@@ -22,16 +22,19 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
+    RelativeLayout layout;
     Adapter adapter;
     List<Notes> notes = new ArrayList<>();
-    List<Notes> multiselect_list = new ArrayList<>();
+    List<Notes> multiSelectList = new ArrayList<>();
     Button addition;
-    RelativeLayout layout;
     long id;
     Notes recover;
-    private List<Notes> notelistAll=notes;
     boolean isMultiSelect = false;
-    private ActionMode mactionMode;
+    private ActionMode actionMode;
+    List<Notes>  updatedListToPassSearch;
+    NotesManagementDatabase database;
+
+
     private ActionMode.Callback actionModeCallbacks = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -53,16 +56,16 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.delete_hidden:
                     Log.d("delete", "pressed");
-                    if (multiselect_list.size() > 0) {
+                    if (multiSelectList.size() > 0) {
                         final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
-                        for (int i = 0; i < multiselect_list.size(); i++) {
-                            Long idToDelete = multiselect_list.get(i).get_id();
-                            notes.remove(multiselect_list.get(i));
+                        for (int i = 0; i < multiSelectList.size(); i++) {
+                            Long idToDelete = multiSelectList.get(i).get_id();
+                            notes.remove(multiSelectList.get(i));
                             Long a = db.deleteNote(idToDelete);
                             Log.d("delete", "  " + a);
                             adapter.notifyItemRemoved(i);
-                            refreshList();
-
+                            updatedListToPassSearch=db.getListOfNotes();
+                            adapter.setListOfAllNotes(updatedListToPassSearch);
                         }
                         mode.finish();
                     }
@@ -75,11 +78,11 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            multiselect_list.clear();
+            multiSelectList.clear();
             isMultiSelect = false;
             adapter.notifyDataSetChanged();
             addition.setVisibility(View.VISIBLE);
-            mactionMode = null;
+            actionMode = null;
 
         }
     };
@@ -118,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
         layout = findViewById(R.id.main);
         recyclerView = findViewById(R.id.review);
-        NotesManagementDatabase database = new NotesManagementDatabase(this);
+        database = new NotesManagementDatabase(this);
         notes = database.getListOfNotes();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new Adapter(this, notes);
@@ -137,45 +140,36 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(final int pos) {
 
-                                final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
                                 final long idToDelete = notes.get(pos).get_id();
                                 Log.d("id to delete", "id "+idToDelete);
-                                recover = db.getOneNote(idToDelete);
-                                db.deleteNote(idToDelete);
+                                recover = database.getOneNote(idToDelete);
+                                database.deleteNote(idToDelete);
                                 notes.remove(pos);
                                 adapter.notifyItemRemoved(pos);
-                                List<Notes>  notelist=db.getListOfNotes();
-                                adapter.setListOfAllNotes(notelist);
+                                updatedListToPassSearch=database.getListOfNotes();
+                                adapter.setListOfAllNotes(updatedListToPassSearch);
 
-
-                               // refreshList();
 
                               final   Snackbar snackbar = Snackbar.make(layout, "Removed from list", Snackbar.LENGTH_LONG);
-
                               snackbar.setAction("UNDO", new View.OnClickListener() {
                                     public void onClick(View view) {
                                     view.setEnabled(false);
                                        view.setClickable(false);
                                         if (recover!=null) {
-                                            id = db.addNoteInDatabaseWhenSwiped(new Notes(recover.get_title(), recover.get_content(), recover.get_dateOfCreation()));
+                                            id = database.addNoteInDatabaseWhenSwiped(new Notes(recover.get_title(), recover.get_content(), recover.get_dateOfCreation()));
                                             Log.d("id to delete", "data " + recover.get_id() + " " + recover.get_title() + " " + recover.get_content() + " " + recover.get_dateOfCreation() );
-                                            recover = db.getOneNote(id);
+                                            recover = database.getOneNote(id);
                                             notes.add(pos, recover);
                                             adapter.notifyItemInserted(pos);
-                                            List<Notes>  notelist=db.getListOfNotes();
-                                            adapter.setListOfAllNotes(notelist);
-
-
+                                            updatedListToPassSearch=database.getListOfNotes();
+                                            adapter.setListOfAllNotes(updatedListToPassSearch);
                                         }
-                                       // refreshList();
+
                                     }
 
                                 });
                                 snackbar.setActionTextColor(Color.YELLOW);
                                 snackbar.show();
-
-
-
                             }
                         }));
 
@@ -187,9 +181,9 @@ public class MainActivity extends AppCompatActivity {
                         new  MyButtonClickListner(){
                             @Override
                             public void onClick(int pos) {
-
                                 Intent intent = new Intent(MainActivity.this, Edit.class);
                                 intent.putExtra("ID", notes.get(pos).get_id());
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
 
                             }
@@ -208,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                     multi_select(position);
                 } else {
                     Intent intent = new Intent(view.getContext(), Details.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("ID", notes.get(position).get_id());
                     view.getContext().startActivity(intent);
 
@@ -219,20 +213,18 @@ public class MainActivity extends AppCompatActivity {
             public void onItemLongClick(View view, int position) {
 
                 if (!isMultiSelect) {
-                    multiselect_list = new ArrayList<Notes>();
+                    multiSelectList = new ArrayList<Notes>();
                     isMultiSelect = true;
                     addition.setVisibility(View.GONE);
-                    if (mactionMode == null) {
-                        mactionMode = startActionMode(actionModeCallbacks);
+                    if (actionMode == null) {
+                        actionMode = startActionMode(actionModeCallbacks);
                     }
-
                 }
                 multi_select(position);
 
             }
 
         }));
-
 
         addition = findViewById(R.id.additionButton);
 
@@ -249,25 +241,26 @@ public class MainActivity extends AppCompatActivity {
     public void multi_select(int position) {
 
 
-        if (mactionMode != null) {
-            if (multiselect_list.contains(notes.get(position))) {
-                multiselect_list.remove((notes.get(position)));
+        if (actionMode != null) {
+            if (multiSelectList.contains(notes.get(position))) {
+                multiSelectList.remove((notes.get(position)));
 
             } else {
                 {
-                    multiselect_list.add(notes.get(position));
+                    multiSelectList.add(notes.get(position));
 
                 }
             }
-            if (multiselect_list.size() > 0) {
-                mactionMode.setTitle(multiselect_list.size() + " Notes Selected");
+            if (multiSelectList.size() > 0) {
+                actionMode.setTitle(multiSelectList.size() + " Notes Selected");
 
 
             } else {
-                mactionMode.setTitle("Select Notes");
+                actionMode.setTitle("Select Notes");
 
             }
-            adapter.setSelectedIds(multiselect_list);
+            adapter.setSelectedIds(multiSelectList);
+
         }
     }
 
@@ -280,23 +273,22 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
    @Override
     public void onBackPressed() {
-        multiselect_list.clear();
-        mactionMode = null;
-        adapter.notifyDataSetChanged();
-        addition.setVisibility(View.VISIBLE);
+        if (isMultiSelect)
+        {
+            multiSelectList.clear();
+            actionMode = null;
+            adapter.notifyDataSetChanged();
+            addition.setVisibility(View.VISIBLE);
+        }
+        else {
+            finish();
+        }
+
 
     }
 
-    private void refreshList(){
-        NotesManagementDatabase database = new NotesManagementDatabase(this);
-        notes = database.getListOfNotes();
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new Adapter(this, notes);
-        recyclerView.setAdapter(adapter);
 
-    }
 
 }

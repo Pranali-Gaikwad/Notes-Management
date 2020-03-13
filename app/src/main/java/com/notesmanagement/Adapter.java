@@ -19,37 +19,38 @@ import java.util.List;
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements Filterable {
 
     private LayoutInflater inflater;
-    private List<Notes> notelistAll;
-    private List<Notes> selectedItems = new ArrayList<>();
     private List<Notes> notes;
+    private List<Notes> noteListTOBackup;
+    private List<Notes> selectedItems = new ArrayList<>();
 
-    Filter filter = new Filter() {
+
+  private   Filter filter = new Filter() {
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
-            List<Notes> filteredlist = new ArrayList<>();
+            List<Notes> filteredList = new ArrayList<>();
 
             if (constraint == null || constraint.length() == 0) {
-                filteredlist.addAll(notelistAll);
-                Log.d("list", "all list " + notelistAll);
+
+                filteredList.addAll(noteListTOBackup);
+                Log.d("list", "all list " + noteListTOBackup);
 
             } else {
 
-                for (Notes n1 : notelistAll) {
+                for (Notes n1 : noteListTOBackup) {
                     if (n1.get_title().toLowerCase().contains(constraint.toString().toLowerCase())
                             || n1.get_content().toLowerCase().contains(constraint.toString().toLowerCase())) {
-                        filteredlist.add(n1);
+                        filteredList.add(n1);
                     }
                 }
             }
             FilterResults results = new FilterResults();
-            results.values = filteredlist;
+            results.values = filteredList;
             return results;
         }
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-
             notes.clear();
             notes.addAll((List) results.values);
             notifyDataSetChanged();
@@ -60,7 +61,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
     public Adapter(Context context, List<Notes> notes) {
         this.inflater = LayoutInflater.from(context);
         this.notes = notes;
-        this.notelistAll = new ArrayList<>(notes);
+        this.noteListTOBackup = new ArrayList<>(notes);
 
     }
 
@@ -77,33 +78,26 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         holder.nTitle1.setText(notes.get(position).get_title());
         holder.nDate1.setText(notes.get(position).get_dateOfCreation());
         Notes n = notes.get(position);
-
         if (selectedItems.contains(n)){
-
             holder.cardView.setCardBackgroundColor(Color.parseColor("#CFF6FC"));
-
         }
         else {
-
             holder.cardView.setCardBackgroundColor(Color.parseColor("#ffffff"));
         }
-
-
     }
-
 
     @Override
     public int getItemCount() {
         return notes.size();
     }
-    public void setSelectedIds(List<Notes> selectedItems) {
+    public void setSelectedIds(List<Notes> selectedItems){
         this.selectedItems = selectedItems;
         notifyDataSetChanged();
     }
 
-    public void setListOfAllNotes(List<Notes> updateList){
-        this.notelistAll = new ArrayList<>(updateList);
-        notifyDataSetChanged();
+    public void setListOfAllNotes(List<Notes> updatedList){
+
+        noteListTOBackup = new ArrayList<>(updatedList);
     }
 
     @Override
@@ -116,17 +110,13 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         LinearLayout layout;
         CardView cardView;
 
-
         public ViewHolder(View itemView) {
             super(itemView);
             nTitle1 = itemView.findViewById(R.id.nTitle);
             nDate1 = itemView.findViewById(R.id.nDate);
             layout = itemView.findViewById(R.id.linearLayout);
             cardView = itemView.findViewById(R.id.cardView);
-
-
         }
-
     }
 }
 

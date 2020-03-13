@@ -29,17 +29,16 @@ import java.util.Queue;
 
 public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
 
-    int buttonWidhth;
+    private int buttonWidth;
     private RecyclerView recyclerView;
     private List<MyButton> buttonList;
     private GestureDetector gestureDetector;
     private int swipePosition= -1;
     private float swipeThreshold=0.5f;
     private Map<Integer,List<MyButton>> buttonBuffer;
-    private Queue<Integer> removeque;
+    private Queue<Integer> removeQue;
 
     private GestureDetector.SimpleOnGestureListener gestureListener= new GestureDetector.SimpleOnGestureListener(){
-
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             for (MyButton button:buttonList){
@@ -68,7 +67,7 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
                     gestureDetector.onTouchEvent(event);
                 }
                 else {
-                    removeque.add(swipePosition);
+                    removeQue.add(swipePosition);
                     swipePosition=-1;
                     recoverSwipeItem();
                 }
@@ -80,9 +79,9 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
     };
 
     private synchronized void recoverSwipeItem() {
-        while (! removeque.isEmpty())
+        while (! removeQue.isEmpty())
         {
-            int pos =removeque.poll();
+            int pos =removeQue.poll();
             if (pos > -1)
             {
                 recyclerView.getAdapter().notifyItemChanged(pos);
@@ -97,8 +96,8 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
         this.gestureDetector=new GestureDetector(context, gestureListener);
         this.recyclerView.setOnTouchListener(onTouchListener);
         this.buttonBuffer = new HashMap<>();
-        this.buttonWidhth = buttonWidhth;
-        removeque =new LinkedList<Integer>(){
+        this.buttonWidth = buttonWidhth;
+        removeQue =new LinkedList<Integer>(){
             @Override
             public boolean add(Integer integer) {
 
@@ -121,7 +120,7 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
     public class MyButton {
 
         private String text;
-        private int imageResId, textsize, color, pos;
+        private int imageResId, textSize, color, pos;
         private RectF clickRegion;
         private MyButtonClickListner listner;
         private Context context;
@@ -130,7 +129,7 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
         public MyButton(Context context, String text, int textsize, int imageResId, int color, MyButtonClickListner listner ) {
             this.text = text;
             this.imageResId = imageResId;
-            this.textsize = textsize;
+            this.textSize = textsize;
             this.color = color;
             this.listner = listner;
             this.context = context;
@@ -151,7 +150,7 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
             p.setColor(color);
             c.drawRect(rectF, p);
             p.setColor(Color.CYAN);
-            p.setTextSize(textsize);
+            p.setTextSize(textSize);
             Rect r =new Rect();
             float cHieght=rectF.height();
             float cWidth =rectF.width();
@@ -194,14 +193,14 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         int pos= viewHolder.getAdapterPosition();
         if (swipePosition != pos)
-            removeque.add(swipePosition);
+            removeQue.add(swipePosition);
         swipePosition=pos;
         if (buttonBuffer.containsKey(swipePosition))
             buttonList = buttonBuffer.get(swipePosition);
         else
             buttonList.clear();
         buttonBuffer.clear();
-        swipeThreshold = 0.5f* buttonList.size()*buttonWidhth;
+        swipeThreshold = 0.5f* buttonList.size()*buttonWidth;
         recoverSwipeItem();
     }
 
@@ -240,7 +239,7 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
                 else {
                     buffer = buttonBuffer.get(pos);
                 }
-                translationX =dX* buffer.size()* buttonWidhth /itemView.getWidth();
+                translationX =dX* buffer.size()* buttonWidth /itemView.getWidth();
                 drawButton(c, itemView, buffer,pos, translationX);
             }
         }
@@ -255,7 +254,6 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
             button.onDraw(c, new RectF(left,itemView.getTop(),right,itemView.getBottom()), pos);
             right=left;
         }
-
     }
 
     public   abstract void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buffer) ;

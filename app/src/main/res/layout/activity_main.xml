@@ -14,8 +14,8 @@
         android:id="@+id/additionButton"
         android:layout_width="55dp"
         android:layout_height="55dp"
-        android:layout_marginLeft="320dp"
-        android:layout_marginTop="520dp"
+        android:layout_marginLeft="290dp"
+        android:layout_marginTop="517dp"
         android:paddingLeft="15dp"
         android:paddingRight="40dp"
         android:drawablePadding="10dp"
@@ -23,7 +23,7 @@
         android:gravity="center_vertical|center_horizontal"
         android:drawableStart="@drawable/ic_add_black_24dp"
         android:textColor="#ffffff"
-        android:drawableLeft="@drawable/ic_add_black_24dp" />
+        android:drawableLeft="@drawable/ic_add_black_24dp"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -32,6 +32,4 @@
         android:layout_height="match_parent"
         android:padding="5dp"
         android:dividerHeight="10.0sp"/>
-
-
 </RelativeLayout>

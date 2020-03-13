@@ -9,18 +9,18 @@
     <Button
         android:id="@+id/saveEditButton"
         android:layout_marginTop="10dp"
-        android:layout_width="70dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="130dp"
         android:background="#ffbf00"
         android:textColor="#ffffff"
         android:shadowColor="#ffffff"
-        android:text="Done"/>
+        android:text="Update"/>
 
 
     <LinearLayout
-        android:layout_width="390dp"
-        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="#ffffff"
         android:orientation="vertical">
@@ -30,24 +30,24 @@
             android:id="@+id/note_title"
             android:textSize="20dp"
             android:maxLength="27"
-            android:layout_marginTop="8dp"
+
             android:layout_marginLeft="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:hint="Note Title"
             android:background="@null"/>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="390dp"
+        android:layout_width="match_parent"
         android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
         android:background="#ffffff"
         android:orientation="vertical">
         <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="500dp"
+            android:layout_height="480dp"
             android:fillViewport="true">
 
 
@@ -59,7 +59,7 @@
             android:gravity="top|left"
             android:maxLines="80"
             android:textSize="20dp"
-            android:layout_height="500dp"
+            android:layout_height="480dp"
             android:layout_width="match_parent"
             android:scrollbars="vertical"
             android:background="@null"

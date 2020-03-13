@@ -57,15 +57,11 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
         String strDate = sdf.format(new Date());
-
-
-
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLOUM_TITLE, notes.get_title());
         contentValues.put(COLOUM_CONTENT, notes.get_content());
         contentValues.put(COLOUM_DATE_OF_CREATION, strDate );
         SQLiteDatabase db = this.getWritableDatabase();
-
         long ID = db.insert(DATABASE_TABLE, null, contentValues);
         Log.d("inserted", " ID " + ID);
         db.close();

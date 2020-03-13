@@ -9,7 +9,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="85dp"
+        android:layout_height="wrap_content"
         android:id="@+id/cardView"
         app:cardMaxElevation="5dp"
         android:layout_margin="5dp"
@@ -24,7 +24,7 @@
             android:id="@+id/imageView3"
             android:layout_marginTop="10dp"
             android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:src="@drawable/bluenote"
       />
 
@@ -43,9 +43,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
+            android:layout_marginBottom="10dp"
             android:textSize="15sp"
             android:layout_marginLeft="80dp"
-            android:text="07/02/2020" />
+            android:text="2020-03-12  12:58:15" />
 
 
     </androidx.cardview.widget.CardView>

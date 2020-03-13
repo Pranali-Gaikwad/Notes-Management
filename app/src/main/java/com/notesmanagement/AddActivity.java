@@ -21,12 +21,11 @@ import java.util.Date;
 
 public class AddActivity extends AppCompatActivity {
 
-    TextView dateshow;
-    EditText noteTitle;
-    EditText noteDetails;
-    String todaysDate;
+    TextView dateToShow;
+    EditText noteTitle, noteDetails;
     Button saved;
     NotesManagementDatabase database;
+    String todayDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,22 +39,21 @@ public class AddActivity extends AppCompatActivity {
         }
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
-        todaysDate = sdf.format(new Date());
+        todayDate = sdf.format(new Date());
         noteTitle = findViewById(R.id.note_title);
         noteDetails = findViewById(R.id.note_details);
-        dateshow = findViewById(R.id.dateadd);
+        dateToShow = findViewById(R.id.dateadd);
         saved = findViewById(R.id.saveDataButton);
-        dateshow.setText(String.valueOf(todaysDate));
+        dateToShow.setText(String.valueOf(todayDate));
 
         database = new NotesManagementDatabase(this);
         saved.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if ((!isEmpty(noteTitle)) || (!isEmpty(noteDetails))) {
-
-                    database.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate));
+                    database.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todayDate));
                     Toast.makeText(v.getContext(), "Note Successfully Saved " , Toast.LENGTH_SHORT).show();
-                    gotoMain();
+                    gotoMainActivity();
                 } else {
                     Toast.makeText(v.getContext(), " Empty Note can not be Saved", Toast.LENGTH_SHORT).show();
                 }
@@ -78,8 +76,8 @@ public class AddActivity extends AppCompatActivity {
             }
             @Override
             public void afterTextChanged(Editable s) {
-
             }
+
         });
 
 
@@ -90,31 +88,29 @@ public class AddActivity extends AppCompatActivity {
 
     }
 
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.delete) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item){
+        if (item.getItemId() == R.id.delete){
 
             Toast.makeText(this, "Note not save", Toast.LENGTH_SHORT).show();
-            gotoMain();
+            gotoMainActivity();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void gotoMain() {
+    private void gotoMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
     public void onBackPressed() {
-        if ((!isEmpty(noteTitle)) || (!isEmpty(noteDetails))) {
-
-            database.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todaysDate));
+        if ((!isEmpty(noteTitle)) || (!isEmpty(noteDetails))){
+            database.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todayDate));
             Toast.makeText(getApplicationContext(), "Note Successfully Saved", Toast.LENGTH_SHORT).show();
         }
-
-      gotoMain();
-
-
+        gotoMainActivity();
     }
+
     boolean isEmpty(EditText text) {
         CharSequence str = text.getText().toString();
         return TextUtils.isEmpty(str);

@@ -16,9 +16,8 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Edit extends AppCompatActivity {
-    EditText noteTitle;
-    EditText noteDetails;
-    String todaysDate;
+    EditText noteTitle, noteDetails;
+    String todayDate;
     NotesManagementDatabase database;
     Button edit;
     Notes note;
@@ -54,7 +53,7 @@ public class Edit extends AppCompatActivity {
                 if ((!isEmpty(noteTitle)) || (!isEmpty(noteDetails))) {
                     note.set_title(noteTitle.getText().toString());
                     note.set_content(noteDetails.getText().toString());
-                    note.set_dateOfCreation(todaysDate);
+                    note.set_dateOfCreation(todayDate);
                     long i = database.editNote(note);
                     if (i == note.get_id()) {
                     } else {
@@ -66,6 +65,7 @@ public class Edit extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.putExtra("ID", note.get_id());
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
             }
         });
@@ -110,6 +110,7 @@ public class Edit extends AppCompatActivity {
 
     private void gotoMain() {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 

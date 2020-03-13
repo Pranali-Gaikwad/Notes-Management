@@ -11,13 +11,14 @@
         android:theme="@style/AppTheme">
         <activity android:name=".Settings"></activity>
         <activity android:name=".Folders" />
-        <activity android:name=".Edit" />
+        <activity android:name=".Edit"    android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Details"
             android:label="@string/title_activity_details"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".AddActivity" android:windowSoftInputMode="adjustResize|adjustPan">
+        <activity android:name=".AddActivity"
+            android:windowSoftInputMode="stateVisible|adjustPan">
         </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
