@@ -105,7 +105,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> implements
         return filter;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView nTitle1, nDate1;
         LinearLayout layout;
         CardView cardView;

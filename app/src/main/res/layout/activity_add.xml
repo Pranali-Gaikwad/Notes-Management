@@ -4,95 +4,73 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
-    android:background="#F7F3F3"
-    android:gravity="center">
-
+    android:layout_margin="10dp"
+    android:background="#F7F3F3">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-
-        android:orientation="horizontal">
+        android:layout_margin="5dp"
+        android:layout_marginTop="10dp">
 
         <TextView
             android:id="@+id/dateadd"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:text="2020-03-12  12:58:15" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/_2020_03_12_12_58_15"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <Button
             android:id="@+id/saveDataButton"
-            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
             android:background="#ffbf00"
-            android:textColor="#ffffff"
-            android:shadowColor="#ffffff"
-            android:text="Done"/>
-
-
+            android:text="@string/done"
+            android:textColor="#ffffff" />
     </LinearLayout>
-
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ffffff"
-        android:layout_marginTop="10dp"
-
-        android:orientation="vertical">
-
+        android:layout_margin="5dp"
+        android:background="#ffffff">
         <EditText
-            android:layout_marginLeft="10dp"
             android:id="@+id/note_title"
-            android:maxLength="27"
-            android:background="@null"
-            android:textSize="20dp"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:hint="Enter Note Title..." />
+            android:layout_marginLeft="8dp"
+            android:background="@null"
+            android:hint="@string/enter_note_title"
+            android:maxLength="27"
+            android:textSize="20sp" />
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="480dp"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical">
-
-        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:background="#ffffff"
-            android:layout_height="480dp"
-
-            android:fillViewport="true">
-
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:background="#ffffff">
 
         <EditText
-            android:layout_marginLeft="10dp"
-            android:id="@+id/note_details"
-            android:inputType="textMultiLine"
-            android:lines="20"
-            android:layout_marginTop="5dp"
-            android:minLines="6"
-            android:gravity="top|left"
-            android:maxLines="80"
-            android:textSize="20dp"
-            android:layout_height="480dp"
-            android:layout_width="match_parent"
-            android:scrollbars="vertical"
-            android:background="@null"
-            android:hint=" Enter Note Details..."
-            />
-        </ScrollView>
+                android:id="@+id/note_details"
+                android:layout_width="match_parent"
+                android:layout_height="480dp"
+                android:layout_marginLeft="8dp"
+                android:background="@null"
+                android:gravity="top|left"
+                android:hint="@string/enter_note_details"
+                android:inputType="textMultiLine"
+                android:lines="20"
+                android:maxLines="80"
+                android:minLines="6"
+                android:scrollbars="vertical"
+                android:textSize="20sp" />
+
     </LinearLayout>
-
-
 </LinearLayout>

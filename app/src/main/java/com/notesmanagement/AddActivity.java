@@ -1,9 +1,9 @@
 package com.notesmanagement;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,7 +36,7 @@ public class AddActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient));
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd  HH:mm:ss");
         todayDate = sdf.format(new Date());
         noteTitle = findViewById(R.id.note_title);
         noteDetails = findViewById(R.id.note_details);
@@ -48,9 +48,8 @@ public class AddActivity extends AppCompatActivity {
         saved.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((!isEmpty(noteTitle)) || (!isEmpty(noteDetails))) {
-                    database.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todayDate));
-                    Toast.makeText(v.getContext(), "Note Successfully Saved " , Toast.LENGTH_SHORT).show();
+                if (!noteTitle.getText().toString().isEmpty() && !noteDetails.getText().toString().isEmpty()){
+                    addNewNoteInDatabase();
                     gotoMainActivity();
                 } else {
                     Toast.makeText(v.getContext(), " Empty Note can not be Saved", Toast.LENGTH_SHORT).show();
@@ -67,9 +66,7 @@ public class AddActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() != 0) {
-                    getSupportActionBar().setTitle(s);
-                }
+                if (s.length() != 0) getSupportActionBar().setTitle(s);
 
             }
             @Override
@@ -102,16 +99,21 @@ public class AddActivity extends AppCompatActivity {
     }
 
     public void onBackPressed() {
-        if ((!isEmpty(noteTitle)) || (!isEmpty(noteDetails))){
-            database.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todayDate));
-            Toast.makeText(getApplicationContext(), "Note Successfully Saved", Toast.LENGTH_SHORT).show();
+        if (!noteTitle.getText().toString().isEmpty() && !noteDetails.getText().toString().isEmpty()){
+            addNewNoteInDatabase();
+            gotoMainActivity();
         }
-        gotoMainActivity();
+        else {
+            Toast.makeText(getApplicationContext(), " Empty Note can not be Saved", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    boolean isEmpty(EditText text) {
-        CharSequence str = text.getText().toString();
-        return TextUtils.isEmpty(str);
+    public void addNewNoteInDatabase()
+    {
+        database.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todayDate));
+        Toast.makeText(getApplicationContext(), "Note Successfully Saved", Toast.LENGTH_SHORT).show();
     }
+
+
 
 }

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +39,7 @@ public class Details extends AppCompatActivity {
 
         Intent intent = getIntent();
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Long id1 = intent.getLongExtra("ID", 0);
+        long id1 = intent.getLongExtra("ID", 0);
 
         database = new NotesManagementDatabase(this);
         notes = database.getOneNote(id1);
@@ -49,8 +48,6 @@ public class Details extends AppCompatActivity {
         dateToShow.setText(notes.get_dateOfCreation());
 
         getSupportActionBar().setTitle(notes.get_title());
-
-
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -76,7 +73,7 @@ public class Details extends AppCompatActivity {
     }
 
     private AlertDialog AskOptionToDelete() {
-        AlertDialog myQuittingDialogBox = new AlertDialog.Builder(this)
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle("Delete Note")
                 .setMessage("Delete this note?")
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener(){
@@ -96,7 +93,7 @@ public class Details extends AppCompatActivity {
                     }
                 })
                 .create();
-        return myQuittingDialogBox;
+        return alertDialog;
     }
 
 }

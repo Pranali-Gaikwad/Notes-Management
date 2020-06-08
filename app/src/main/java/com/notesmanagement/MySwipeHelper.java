@@ -1,5 +1,6 @@
 package com.notesmanagement;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -89,6 +90,7 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     public MySwipeHelper(Context context, RecyclerView recyclerView, int buttonWidhth) {
         super(0, ItemTouchHelper.LEFT);
         this.recyclerView=recyclerView;
@@ -100,7 +102,6 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
         removeQue =new LinkedList<Integer>(){
             @Override
             public boolean add(Integer integer) {
-
                 if (contains(integer)){
                     return false;
                 }
@@ -124,7 +125,6 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
         private RectF clickRegion;
         private MyButtonClickListner listner;
         private Context context;
-        private Resources resources;
 
         public MyButton(Context context, String text, int textsize, int imageResId, int color, MyButtonClickListner listner ) {
             this.text = text;
@@ -133,7 +133,7 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
             this.color = color;
             this.listner = listner;
             this.context = context;
-            resources = context.getResources();
+
         }
 
         public boolean onClick(float x, float y){
@@ -156,7 +156,7 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
             float cWidth =rectF.width();
             p.setTextAlign(Paint.Align.LEFT);
             p.getTextBounds(text,0,text.length(), r);
-            float x=0, y=0;
+            float x, y=0;
             if (imageResId == 0){
                 x = cWidth/2f - r.width()/2f - r.left;
                 y = cHieght/2f + r.height()/2f - r.bottom;
@@ -200,11 +200,12 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
         else
             buttonList.clear();
         buttonBuffer.clear();
+        assert buttonList != null;
         swipeThreshold = 0.5f* buttonList.size()*buttonWidth;
         recoverSwipeItem();
     }
 
-    public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder){
+    public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder){
         return swipeThreshold;
     }
 

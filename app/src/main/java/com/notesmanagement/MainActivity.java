@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     private ActionMode.Callback actionModeCallbacks = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-
             mode.getMenuInflater().inflate(R.menu.delete_hidden, menu);
             mode.setTitle("0 Notes Selected");
             return true;
@@ -54,27 +52,24 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 
-            switch (item.getItemId()) {
-                case R.id.delete_hidden:
-                    Log.d("delete", "pressed");
-                    if (multiSelectList.size() > 0) {
-                        final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
-                        for (int i = 0; i < multiSelectList.size(); i++) {
-                            Long idToDelete = multiSelectList.get(i).get_id();
-                            notes.remove(multiSelectList.get(i));
-                            Long a = db.deleteNote(idToDelete);
-                            Log.d("delete", "  " + a);
-                            adapter.notifyItemRemoved(i);
-                            updatedListToPassSearch=db.getListOfNotes();
-                            adapter.setListOfAllNotes(updatedListToPassSearch);
-                        }
-                        mode.finish();
+            if (item.getItemId() == R.id.delete_hidden) {
+                Log.d("delete", "pressed");
+                if (multiSelectList.size() > 0) {
+                    final NotesManagementDatabase db = new NotesManagementDatabase(getApplicationContext());
+                    for (int i = 0; i < multiSelectList.size(); i++) {
+                        long idToDelete = multiSelectList.get(i).get_id();
+                         notes.remove(multiSelectList.get(i));
+                        Long a = db.deleteNote(idToDelete);
+                        Log.d("delete", "  " + a);
+                        adapter.notifyItemRemoved(i);
+                        updatedListToPassSearch = db.getListOfNotes();
+                        adapter.setListOfAllNotes(updatedListToPassSearch);
                     }
-                    return true;
-                default:
-                    return false;
-
+                    mode.finish();
+                }
+                return true;
             }
+            return false;
         }
 
         @Override
@@ -214,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemLongClick(View view, int position) {
 
                 if (!isMultiSelect) {
-                    multiSelectList = new ArrayList<Notes>();
+                    multiSelectList = new ArrayList<>();
                     isMultiSelect = true;
                     addition.setVisibility(View.GONE);
                     if (actionMode == null) {
@@ -249,16 +244,12 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 {
                     multiSelectList.add(notes.get(position));
-
                 }
             }
             if (multiSelectList.size() > 0) {
                 actionMode.setTitle(multiSelectList.size() + " Notes Selected");
-
-
             } else {
                 actionMode.setTitle("Select Notes");
-
             }
             adapter.setSelectedIds(multiSelectList);
 

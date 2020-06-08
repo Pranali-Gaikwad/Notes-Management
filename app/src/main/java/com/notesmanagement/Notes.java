@@ -1,5 +1,7 @@
 package com.notesmanagement;
 
+import androidx.annotation.NonNull;
+
 public class Notes {
     private long _id;
     private String _title;
@@ -57,6 +59,7 @@ public class Notes {
     }
 
 
+    @NonNull
     @Override
     public String toString() {
         return "Notes{" +

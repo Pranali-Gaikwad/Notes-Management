@@ -1,10 +1,11 @@
 package com.notesmanagement;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Edit extends AppCompatActivity {
@@ -26,15 +28,12 @@ public class Edit extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
-
-        getSupportActionBar().setDefaultDisplayHomeAsUpEnabled(true);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient));
         }
-
         Intent intent = getIntent();
-        Long id1 = intent.getLongExtra("ID", 0);
+        long id1 = intent.getLongExtra("ID", 0);
 
         database = new NotesManagementDatabase(this);
         note = database.getOneNote(id1);
@@ -50,23 +49,20 @@ public class Edit extends AppCompatActivity {
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if ((!isEmpty(noteTitle)) || (!isEmpty(noteDetails))) {
-                    note.set_title(noteTitle.getText().toString());
-                    note.set_content(noteDetails.getText().toString());
-                    note.set_dateOfCreation(todayDate);
-                    long i = database.editNote(note);
-                    if (i == note.get_id()) {
-                    } else {
+                if (!noteTitle.getText().toString().isEmpty() && !noteDetails.getText().toString().isEmpty()){
+                    if(noteTitle.getText().toString().equals(note.get_title()) && noteDetails.getText().toString().equals(note.get_content())){
+
+                    }else {
+                        note.set_title(noteTitle.getText().toString());
+                        note.set_content(noteDetails.getText().toString());
+                        note.set_dateOfCreation(todayDate);
+                        database.editNote(note);
                         Toast.makeText(v.getContext(), "Note Update Successfully", Toast.LENGTH_SHORT).show();
+                        gotoMain();
                     }
                 } else {
                     Toast.makeText(v.getContext(), "Empty Note can not be Save Successfully", Toast.LENGTH_SHORT).show();
                 }
-
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                intent.putExtra("ID", note.get_id());
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
             }
         });
 
@@ -78,9 +74,7 @@ public class Edit extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() != 0) {
-                    getSupportActionBar().setTitle(s);
-                }
+                if (s.length() != 0) getSupportActionBar().setTitle(s);
 
             }
 
@@ -91,38 +85,12 @@ public class Edit extends AppCompatActivity {
         });
 
     }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.save_menu, menu);
-        return true;
-
-    }
-
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        if (item.getItemId() == R.id.delete) {
-
-            Toast.makeText(this, "Note not Update Successfully", Toast.LENGTH_SHORT).show();
-            gotoMain();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     private void gotoMain() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
 
-    public void onBackPressed() {
-        super.onBackPressed();
 
-    }
-
-    boolean isEmpty(EditText text) {
-        CharSequence str = text.getText().toString();
-        return TextUtils.isEmpty(str);
-
-    }
 }
 
