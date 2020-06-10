@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,7 +22,6 @@ import java.util.Date;
 
 
 public class AddActivity extends AppCompatActivity {
-
     TextView dateToShow;
     EditText noteTitle, noteDetails;
     Button saved;
@@ -51,8 +52,8 @@ public class AddActivity extends AppCompatActivity {
                 if (!noteTitle.getText().toString().isEmpty() && !noteDetails.getText().toString().isEmpty()){
                     addNewNoteInDatabase();
                     gotoMainActivity();
-                } else {
-                    Toast.makeText(v.getContext(), " Empty Note can not be Saved", Toast.LENGTH_SHORT).show();
+                }  else {
+                    showToastMethod("Empty Note can not be Saved");
                 }
 
             }
@@ -61,13 +62,10 @@ public class AddActivity extends AppCompatActivity {
         noteTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.length() != 0) getSupportActionBar().setTitle(s);
-
             }
             @Override
             public void afterTextChanged(Editable s) {
@@ -85,8 +83,7 @@ public class AddActivity extends AppCompatActivity {
 
     public boolean onOptionsItemSelected(@NonNull MenuItem item){
         if (item.getItemId() == R.id.delete){
-
-            Toast.makeText(this, "Note not save", Toast.LENGTH_SHORT).show();
+            showToastMethod("Note not save");
             gotoMainActivity();
         }
         return super.onOptionsItemSelected(item);
@@ -104,16 +101,23 @@ public class AddActivity extends AppCompatActivity {
             gotoMainActivity();
         }
         else {
-            Toast.makeText(getApplicationContext(), " Empty Note can not be Saved", Toast.LENGTH_SHORT).show();
+           super.onBackPressed();
         }
     }
 
     public void addNewNoteInDatabase()
     {
         database.addNoteInDatabase(new Notes(noteTitle.getText().toString(), noteDetails.getText().toString(), todayDate));
-        Toast.makeText(getApplicationContext(), "Note Successfully Saved", Toast.LENGTH_SHORT).show();
+        showToastMethod("Note Successfully Saved");
     }
-
-
-
+    public void showToastMethod(String message){
+        View toastView = getLayoutInflater().inflate(R.layout.toast, (ViewGroup) findViewById(R.id.linLay));
+        TextView textViewToShowMsg= toastView.findViewById(R.id.textViewMsgForToast);
+        textViewToShowMsg.setText(message);
+        Toast toast=new Toast(AddActivity.this);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(toastView);
+        toast.setGravity(Gravity.BOTTOM,0,0);
+        toast.show();
+    }
 }

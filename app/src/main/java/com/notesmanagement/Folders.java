@@ -2,18 +2,19 @@ package com.notesmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-
 import java.util.ArrayList;
 
 public class Folders extends AppCompatActivity {
@@ -42,7 +43,7 @@ public class Folders extends AppCompatActivity {
     arrayList.add("Trash");
     arrayList.add("Study");
 
-    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
+    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
     list.setAdapter(arrayAdapter);
 
 
@@ -55,7 +56,7 @@ public class Folders extends AppCompatActivity {
           intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
           startActivity(intent);
         }
-        Toast.makeText(Folders.this, clickedItem, Toast.LENGTH_LONG).show();
+        showToastMethod("All Notes");
       }
 
     });
@@ -69,5 +70,16 @@ public class Folders extends AppCompatActivity {
       startActivity(intent);
     }
     return super.onOptionsItemSelected(item);
+  }
+
+  public void showToastMethod(String message){
+    View toastView = getLayoutInflater().inflate(R.layout.toast, (ViewGroup) findViewById(R.id.linLay));
+    TextView textViewToShowMsg= toastView.findViewById(R.id.textViewMsgForToast);
+    textViewToShowMsg.setText(message);
+    Toast toast=new Toast(Folders.this);
+    toast.setDuration(Toast.LENGTH_LONG);
+    toast.setView(toastView);
+    toast.setGravity(Gravity.BOTTOM,0,0);
+    toast.show();
   }
 }

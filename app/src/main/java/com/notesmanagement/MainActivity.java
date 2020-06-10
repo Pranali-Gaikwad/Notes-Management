@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                     for (int i = 0; i < multiSelectList.size(); i++) {
                         long idToDelete = multiSelectList.get(i).get_id();
                          notes.remove(multiSelectList.get(i));
-                        Long a = db.deleteNote(idToDelete);
+                        long a = db.deleteNote(idToDelete);
                         Log.d("delete", "  " + a);
                         adapter.notifyItemRemoved(i);
                         updatedListToPassSearch = db.getListOfNotes();
@@ -280,7 +280,4 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-
-
 }

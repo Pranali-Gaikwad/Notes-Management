@@ -11,4 +11,5 @@
     <string name="note_title">Note Title</string>
     <string name="note_details">Note Details</string>
     <string name="imageOfNotes">imageOfNotes</string>
+    <string name="textviewforToast">TextView</string>
 </resources>

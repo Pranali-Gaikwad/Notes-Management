@@ -1,20 +1,17 @@
 package com.notesmanagement;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Edit extends AppCompatActivity {
@@ -51,17 +48,17 @@ public class Edit extends AppCompatActivity {
             public void onClick(View v) {
                 if (!noteTitle.getText().toString().isEmpty() && !noteDetails.getText().toString().isEmpty()){
                     if(noteTitle.getText().toString().equals(note.get_title()) && noteDetails.getText().toString().equals(note.get_content())){
-
+                        showToastMethod("Please make the changes to Update Note Successfully");
                     }else {
                         note.set_title(noteTitle.getText().toString());
                         note.set_content(noteDetails.getText().toString());
                         note.set_dateOfCreation(todayDate);
                         database.editNote(note);
-                        Toast.makeText(v.getContext(), "Note Update Successfully", Toast.LENGTH_SHORT).show();
+                        showToastMethod("Note Update Successfully");
                         gotoMain();
                     }
                 } else {
-                    Toast.makeText(v.getContext(), "Empty Note can not be Save Successfully", Toast.LENGTH_SHORT).show();
+                    showToastMethod("Empty Note can not be Save Successfully");
                 }
             }
         });
@@ -90,6 +87,17 @@ public class Edit extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }
+    public void showToastMethod(String message){
+        View toastView = getLayoutInflater().inflate(R.layout.toast, (ViewGroup) findViewById(R.id.linLay));
+        TextView textViewToShowMsg= toastView.findViewById(R.id.textViewMsgForToast);
+        textViewToShowMsg.setText(message);
+        Toast toast=new Toast(Edit.this);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(toastView);
+        toast.setGravity(Gravity.BOTTOM,0,0);
+        toast.show();
+    }
+
 
 
 }

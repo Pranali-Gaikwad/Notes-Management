@@ -3,9 +3,11 @@ package com.notesmanagement;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,7 +81,7 @@ public class Details extends AppCompatActivity {
                 .setPositiveButton("Delete", new DialogInterface.OnClickListener(){
                     public void onClick(DialogInterface dialog, int whichButton){
                         database.deleteNote(notes.get_id());
-                        Toast.makeText(getApplicationContext(), "Note Successfully Deleted", Toast.LENGTH_SHORT).show();
+                        showToastMethod("Note Successfully Deleted");
                         Intent intent= new Intent(getApplicationContext(), MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -94,6 +96,16 @@ public class Details extends AppCompatActivity {
                 })
                 .create();
         return alertDialog;
+    }
+    public void showToastMethod(String message){
+        View toastView = getLayoutInflater().inflate(R.layout.toast, (ViewGroup) findViewById(R.id.linLay));
+        TextView textViewToShowMsg= toastView.findViewById(R.id.textViewMsgForToast);
+        textViewToShowMsg.setText(message);
+        Toast toast=new Toast(Details.this);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setView(toastView);
+        toast.setGravity(Gravity.BOTTOM,0,0);
+        toast.show();
     }
 
 }
