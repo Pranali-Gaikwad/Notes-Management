@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:background="#F7F3F3"
+    android:layout_margin="5dp"
     android:id="@+id/main">
 
     <Button
         android:id="@+id/additionButton"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
-        android:layout_marginLeft="290dp"
-        android:layout_marginTop="550dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="40dp"
-        android:drawablePadding="10dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="280dp"
+        android:layout_marginTop="500dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="35dp"
         android:background="@drawable/round_button"
         android:gravity="center_vertical|center_horizontal"
         android:drawableStart="@drawable/ic_add_black_24dp"

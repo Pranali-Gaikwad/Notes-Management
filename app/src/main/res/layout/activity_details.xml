@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
+    android:layout_margin="5dp"
     tools:context=".Details"
     android:background="#F7F3F3">
 
@@ -25,22 +25,22 @@
                 android:layout_marginLeft="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:text="@string/textView"
                 android:textStyle="bold" />
 
 
     <ScrollView
         android:layout_width="match_parent"
-            android:layout_height="520dp"
+            android:layout_height="480dp"
             android:fillViewport="true"
             android:layout_margin="5dp"
             android:background="#ffffff">
                 <TextView
                  android:layout_width="match_parent"
-                 android:layout_height="520dp"
+                 android:layout_height="480dp"
                  android:id="@+id/dContent"
-                 android:textSize="20sp"
+                 android:textSize="14sp"
                     android:layout_margin="10dp"
                  android:scrollbars="vertical"
                  android:text="@string/textView" />
@@ -48,12 +48,12 @@
 
             <ImageButton
                 android:id="@+id/delete"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:layout_marginLeft="290dp"
-                android:layout_marginStart="290dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="280dp"
+                android:layout_marginStart="280dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
                 android:background="@drawable/round_button"
                 android:src="@drawable/ic_delete_black_24dp" />
 

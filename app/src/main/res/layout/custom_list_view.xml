@@ -8,15 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/cardView"
-        android:layout_margin="5dp"
+        android:layout_marginBottom="5dp"
         android:orientation="vertical"
         android:background="#ffffff">
 
         <ImageView
             android:id="@+id/imageView3"
             android:layout_marginTop="10dp"
-            android:layout_width="60dp"
-            android:layout_height="50dp"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
             android:src="@drawable/bluenote"
             android:contentDescription="@string/imageOfNotes" />
 
@@ -26,18 +26,18 @@
             android:layout_height="wrap_content"
             android:text="@string/note_title"
             android:layout_marginTop="10dp"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="bold"
-            android:layout_marginLeft="80dp"/>
+            android:layout_marginLeft="70dp"/>
 
         <TextView
             android:id="@+id/nDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="40dp"
             android:layout_marginBottom="10dp"
-            android:textSize="15sp"
-            android:layout_marginLeft="80dp"
+            android:textSize="14sp"
+            android:layout_marginLeft="70dp"
             android:text="@string/_2020_03_12_12_58_15" />
     </androidx.cardview.widget.CardView>
 
