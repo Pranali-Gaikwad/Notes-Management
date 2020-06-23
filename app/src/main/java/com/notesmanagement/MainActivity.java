@@ -19,7 +19,6 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     RelativeLayout layout;
@@ -33,17 +32,13 @@ public class MainActivity extends AppCompatActivity {
     private ActionMode actionMode;
     List<Notes>  updatedListToPassSearch;
     NotesManagementDatabase database;
-
-
     private ActionMode.Callback actionModeCallbacks = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             mode.getMenuInflater().inflate(R.menu.delete_hidden, menu);
             mode.setTitle("0 Notes Selected");
             return true;
-
         }
-
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             return false;
@@ -51,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-
             if (item.getItemId() == R.id.delete_hidden) {
                 Log.d("delete", "pressed");
                 if (multiSelectList.size() > 0) {
@@ -135,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
                         new  MyButtonClickListner(){
                             @Override
                             public void onClick(final int pos) {
-
                                 final long idToDelete = notes.get(pos).get_id();
                                 Log.d("id to delete", "id "+idToDelete);
                                 recover = database.getOneNote(idToDelete);

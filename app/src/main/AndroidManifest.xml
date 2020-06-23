@@ -9,9 +9,9 @@
         android:roundIcon="@mipmap/bluenote"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Settings"></activity>
+        <activity android:name=".Settings"/>
         <activity android:name=".Folders" />
-        <activity android:name=".Edit"    android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".Edit"  android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Details"
             android:label="@string/title_activity_details"

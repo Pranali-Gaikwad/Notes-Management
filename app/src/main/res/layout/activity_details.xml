@@ -10,12 +10,12 @@
     android:background="#F7F3F3">
 
             <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
                 app:titleTextColor="#ffffff"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
 
 
@@ -32,13 +32,13 @@
 
     <ScrollView
         android:layout_width="match_parent"
-            android:layout_height="480dp"
+            android:layout_height="520dp"
             android:fillViewport="true"
             android:layout_margin="5dp"
             android:background="#ffffff">
                 <TextView
                  android:layout_width="match_parent"
-                 android:layout_height="480dp"
+                 android:layout_height="520dp"
                  android:id="@+id/dContent"
                  android:textSize="14sp"
                     android:layout_margin="10dp"

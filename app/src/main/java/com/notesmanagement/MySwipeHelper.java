@@ -256,6 +256,5 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
             right=left;
         }
     }
-
     public   abstract void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buffer) ;
 }

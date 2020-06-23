@@ -131,9 +131,8 @@ public class NotesManagementDatabase extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLOUM_TITLE, notes.get_title());
         contentValues.put(COLOUM_CONTENT, notes.get_content());
-        contentValues.put(COLOUM_DATE_OF_CREATION, notes.get_dateOfCreation() );
+        contentValues.put(COLOUM_DATE_OF_CREATION, notes.get_dateOfCreation());
         SQLiteDatabase db = this.getWritableDatabase();
-
         long ID = db.insert(DATABASE_TABLE, null, contentValues);
         Log.d("inserted", " ID " + ID);
         db.close();
